@@ -9,10 +9,6 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: terraform-infra
-
     env:
       TF_VAR_token: ${{ secrets.YC_TOKEN }}
       TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
@@ -26,8 +22,13 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
+        working-directory: terraform-infra
         run: terraform init
 
-      - name: Terraform Plan
-        run: terraform plan
+      - name: Terraform Validate
+        working-directory: terraform-infra
+        run: terraform validate
 
+      - name: Terraform Plan
+        working-directory: terraform-infra
+        run: terraform plan
