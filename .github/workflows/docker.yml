@@ -11,6 +11,7 @@ env:
   IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/test-app
 
 
+
 # -------------------------
 # 1. BUILD & PUSH LATEST
 # -------------------------
