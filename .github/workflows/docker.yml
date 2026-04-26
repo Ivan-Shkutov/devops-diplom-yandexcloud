@@ -14,22 +14,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      # 🔥 BUILD ИЗ cicd/app
-      - name: Build image (latest)
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/test-app:latest ./cicd/app
+      - name: Build latest image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/test-app:latest ./cicd/app
 
       - name: Push latest
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/test-app:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/test-app:latest
 
-      # 🔥 TAG BUILD
       - name: Build tagged image
         if: startsWith(github.ref, 'refs/tags/')
         run: |
@@ -50,23 +45,25 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup kubectl
-        uses: azure/setup-kubectl@v4
+      - uses: azure/setup-kubectl@v4
 
-      - name: Configure kubeconfig
+      - name: Setup kubeconfig
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
 
-      - name: Deploy
+      - name: Deploy application (safe apply)
         run: |
           TAG=${GITHUB_REF#refs/tags/}
 
+          # создаём/обновляем ресурсы
           kubectl apply -f cicd/k8s/configmap/
           kubectl apply -f cicd/k8s/deployment/
 
+          # гарантируем rollout
           kubectl set image deployment/nginx-deployment \
             nginx-deployment=${{ secrets.DOCKER_USERNAME }}/test-app:$TAG
+
+          kubectl rollout status deployment/nginx-deployment
