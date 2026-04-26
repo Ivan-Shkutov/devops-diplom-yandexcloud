@@ -9,6 +9,10 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: terraform-infra
+
     env:
       TF_VAR_token: ${{ secrets.YC_TOKEN }}
       TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
@@ -27,5 +31,3 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
