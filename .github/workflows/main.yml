@@ -9,6 +9,11 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
+    env:
+      TF_VAR_token: ${{ secrets.YC_TOKEN }}
+      TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
+      TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
