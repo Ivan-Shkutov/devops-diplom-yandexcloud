@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-html
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head>
+      <meta charset="UTF-8">
+
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+      <title>Diploma</title>
+
+      <style>
+        body {
+          margin: 0;
+          font-family: 'Inter', sans-serif;
+          background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+          color: white;
+          text-align: center;
+        }
+
+        .container {
+          padding-top: 60px;
+        }
+
+        h1 {
+          font-size: 42px;
+          font-weight: 800;
+          margin-bottom: 10px;
+        }
+
+        p {
+          font-size: 18px;
+          opacity: 0.8;
+        }
+
+        .card {
+          margin: 40px auto;
+          width: 80%;
+          max-width: 900px;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        img {
+          width: 100%;
+          display: block;
+        }
+
+        .footer {
+          margin-top: 30px;
+          font-size: 14px;
+          opacity: 0.6;
+        }
+      </style>
+    </head>
+
+    <body>
+
+      <div class="container">
+
+        <h1>Дипломный практикум в Yandex.Cloud</h1>
+
+        <div class="card">
+          <img src="data:image/svg+xml;utf8,%3Csvg%20width%3D%221400%22%20height%3D%22800%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Crect%20width%3D%221400%22%20height%3D%22800%22%20fill%3D%22%23202020%22/%3E%3Ctext%20x%3D%22700%22%20y%3D%22400%22%20fill%3D%22white%22%20font-size%3D%2248%22%20text-anchor%3D%22middle%22%3EShkutov%20Ivan%20Vladimirovich%3C/text%3E%3C/svg%3E" alt="profile ima>
+        </div>
+
+      </div>
+
+    </body>
+    </html>
+
+
+
+
