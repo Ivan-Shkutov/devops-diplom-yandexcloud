@@ -1,4 +1,4 @@
-name: Docker CI/CD
+name: Full CI/CD Pipeline
 
 on:
   push:
@@ -10,28 +10,67 @@ on:
 jobs:
 
   build-and-push:
+    name: Build & Push Docker
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx-diplom:latest .
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx-diplom:latest .
 
       - name: Push latest
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/nginx-diplom:latest
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/nginx-diplom:latest
 
-      - name: Tag image
+      - name: Tag image (on tag)
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           TAG=${GITHUB_REF#refs/tags/}
           docker tag ${{ secrets.DOCKER_USERNAME }}/nginx-diplom:latest ${{ secrets.DOCKER_USERNAME }}/nginx-diplom:$TAG
 
-      - name: Push tag
+      - name: Push tag (on tag)
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           TAG=${GITHUB_REF#refs/tags/}
           docker push ${{ secrets.DOCKER_USERNAME }}/nginx-diplom:$TAG
+
+
+  deploy:
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Setup kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+
+      - name: Deploy application
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+
+          kubectl get deployment nginx-deployment || \
+          kubectl create deployment nginx-deployment \
+          --image=${{ secrets.DOCKER_USERNAME }}/nginx-diplom:$TAG
+
+          kubectl set image deployment/nginx-deployment \
+          nginx-deployment=${{ secrets.DOCKER_USERNAME }}/nginx-diplom:$TAG
+
+          kubectl get svc nginx-service || \
+          kubectl expose deployment nginx-deployment \
+          --type=NodePort --port=80 --name=nginx-service
