@@ -1,0 +1,2658 @@
+ansible-playbook -i inventory/mycluster/inventory.ini \
+  -u ubuntu \
+  --become \
+  cluster.yml
+
+PLAY [Check Ansible version] *****************************************************************************************************************************************************************************************************
+Saturday 18 April 2026  14:52:33 +0000 (0:00:00.021)       0:00:00.021 ******** 
+
+TASK [Check 2.18.0 <= Ansible version < 2.19.0] **********************************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:33 +0000 (0:00:00.030)       0:00:00.052 ******** 
+
+TASK [Check that python netaddr is installed] ************************************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:33 +0000 (0:00:00.224)       0:00:00.276 ******** 
+
+TASK [Check that jinja is not too old (install via pip)] *************************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+PLAY [Inventory setup and validation] ********************************************************************************************************************************************************************************************
+Saturday 18 April 2026  14:52:33 +0000 (0:00:00.111)       0:00:00.388 ******** 
+
+TASK [dynamic_groups : Match needed groups by their old names or definition] *****************************************************************************************************************************************************
+ok: [master] => (item={'key': 'k8s_cluster', 'value': ['kube_node', 'kube_control_plane', 'calico_rr']})
+ok: [node1] => (item={'key': 'k8s_cluster', 'value': ['kube_node', 'kube_control_plane', 'calico_rr']})
+ok: [node3] => (item={'key': 'k8s_cluster', 'value': ['kube_node', 'kube_control_plane', 'calico_rr']})
+ok: [node2] => (item={'key': 'k8s_cluster', 'value': ['kube_node', 'kube_control_plane', 'calico_rr']})
+Saturday 18 April 2026  14:52:33 +0000 (0:00:00.122)       0:00:00.510 ******** 
+
+TASK [validate_inventory : Fail if removed variables are used] *******************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:33 +0000 (0:00:00.090)       0:00:00.601 ******** 
+
+TASK [validate_inventory : Stop if kube_control_plane group is empty] ************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:33 +0000 (0:00:00.092)       0:00:00.693 ******** 
+
+TASK [validate_inventory : Stop if etcd group is empty in external etcd mode] ****************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:33 +0000 (0:00:00.034)       0:00:00.728 ******** 
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.150)       0:00:00.878 ******** 
+
+TASK [validate_inventory : Stop if unsupported version of Kubernetes] ************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node1] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node2] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node3] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.069)       0:00:00.948 ******** 
+
+TASK [validate_inventory : Stop if known booleans are set as strings (Use JSON format on CLI: -e "{'key': true }")] **************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.044)       0:00:00.992 ******** 
+
+TASK [validate_inventory : Stop if even number of etcd hosts] ********************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.091)       0:00:01.083 ******** 
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.039)       0:00:01.123 ******** 
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.042)       0:00:01.165 ******** 
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.048)       0:00:01.215 ******** 
+
+TASK [validate_inventory : Check that kube_service_addresses is a network range] *************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.121)       0:00:01.337 ******** 
+
+TASK [validate_inventory : Check that kube_pods_subnet is a network range] *******************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.173)       0:00:01.510 ******** 
+
+TASK [validate_inventory : Check that kube_pods_subnet does not collide with kube_service_addresses] *****************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.112)       0:00:01.622 ******** 
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.022)       0:00:01.644 ******** 
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.027)       0:00:01.672 ******** 
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.057)       0:00:01.729 ******** 
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.019)       0:00:01.748 ******** 
+Saturday 18 April 2026  14:52:34 +0000 (0:00:00.026)       0:00:01.775 ******** 
+
+TASK [validate_inventory : Stop if unsupported options selected] *****************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:35 +0000 (0:00:00.076)       0:00:01.852 ******** 
+Saturday 18 April 2026  14:52:35 +0000 (0:00:00.045)       0:00:01.897 ******** 
+Saturday 18 April 2026  14:52:35 +0000 (0:00:00.083)       0:00:01.981 ******** 
+Saturday 18 April 2026  14:52:35 +0000 (0:00:00.033)       0:00:02.014 ******** 
+Saturday 18 April 2026  14:52:35 +0000 (0:00:00.035)       0:00:02.049 ******** 
+
+TASK [validate_inventory : Ensure minimum containerd version] ********************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  14:52:35 +0000 (0:00:00.089)       0:00:02.138 ******** 
+Saturday 18 April 2026  14:52:35 +0000 (0:00:00.033)       0:00:02.171 ******** 
+
+TASK [validate_inventory : Download_file | Check if requested Kubernetes are supported] ******************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node1] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node2] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node3] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+[WARNING]: Could not match supplied host pattern, ignoring: bastion
+
+PLAY [Install bastion ssh config] ************************************************************************************************************************************************************************************************
+skipping: no hosts matched
+[WARNING]: Could not match supplied host pattern, ignoring: calico_rr
+
+PLAY [Bootstrap hosts for Ansible] ***********************************************************************************************************************************************************************************************
+Saturday 18 April 2026  14:52:35 +0000 (0:00:00.143)       0:00:02.315 ******** 
+[WARNING]: raw module does not support the environment keyword
+
+TASK [bootstrap_os : Fetch /etc/os-release] **************************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  14:52:47 +0000 (0:00:12.232)       0:00:14.548 ******** 
+Saturday 18 April 2026  14:52:47 +0000 (0:00:00.196)       0:00:14.744 ******** 
+
+TASK [bootstrap_os : Include tasks] **********************************************************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/bootstrap_os/tasks/ubuntu.yml for master, node1, node2, node3 => (item=/home/vm/netology/diplom/infra/03-k8s/kubespray/roles/bootstrap_os/tasks/ubuntu.yml)
+Saturday 18 April 2026  14:52:48 +0000 (0:00:00.082)       0:00:14.826 ******** 
+
+TASK [bootstrap_os : Check if bootstrap is needed] *******************************************************************************************************************************************************************************
+ok: [node3]
+ok: [node2]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  14:53:07 +0000 (0:00:19.506)       0:00:34.333 ******** 
+
+TASK [bootstrap_os : Check http::proxy in apt configuration files] ***************************************************************************************************************************************************************
+ok: [node3]
+ok: [node2]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  14:53:26 +0000 (0:00:19.422)       0:00:53.755 ******** 
+Saturday 18 April 2026  14:53:27 +0000 (0:00:00.049)       0:00:53.805 ******** 
+
+TASK [bootstrap_os : Check https::proxy in apt configuration files] **************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  14:53:42 +0000 (0:00:15.593)       0:01:09.399 ******** 
+Saturday 18 April 2026  14:53:42 +0000 (0:00:00.041)       0:01:09.440 ******** 
+Saturday 18 April 2026  14:53:42 +0000 (0:00:00.041)       0:01:09.482 ******** 
+Saturday 18 April 2026  14:53:42 +0000 (0:00:00.043)       0:01:09.525 ******** 
+Saturday 18 April 2026  14:53:42 +0000 (0:00:00.154)       0:01:09.680 ******** 
+Saturday 18 April 2026  14:53:42 +0000 (0:00:00.041)       0:01:09.721 ******** 
+
+TASK [system_packages : Gather OS information] ***********************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  14:54:09 +0000 (0:00:26.583)       0:01:36.305 ******** 
+Saturday 18 April 2026  14:54:09 +0000 (0:00:00.052)       0:01:36.357 ******** 
+Saturday 18 April 2026  14:54:09 +0000 (0:00:00.043)       0:01:36.401 ******** 
+Saturday 18 April 2026  14:54:09 +0000 (0:00:00.053)       0:01:36.454 ******** 
+Saturday 18 April 2026  14:54:09 +0000 (0:00:00.103)       0:01:36.557 ******** 
+
+TASK [system_packages : Manage packages] *****************************************************************************************************************************************************************************************
+ok: [node2] => (item=install)
+ok: [node3] => (item=install)
+ok: [node1] => (item=install)
+ok: [master] => (item=install)
+Saturday 18 April 2026  14:54:39 +0000 (0:00:29.628)       0:02:06.186 ******** 
+
+TASK [bootstrap_os : Create remote_tmp for it is used by another module] *********************************************************************************************************************************************************
+ok: [node2]
+ok: [master]
+ok: [node1]
+ok: [node3]
+Saturday 18 April 2026  14:54:49 +0000 (0:00:10.434)       0:02:16.621 ******** 
+
+TASK [bootstrap_os : Gather facts] ***********************************************************************************************************************************************************************************************
+ok: [node3]
+ok: [node2]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  14:55:19 +0000 (0:00:29.817)       0:02:46.438 ******** 
+
+TASK [bootstrap_os : Assign inventory name to unconfigured hostnames (non-CoreOS, non-Flatcar, Suse and ClearLinux, non-Fedora)] *************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  14:56:00 +0000 (0:00:40.365)       0:03:26.803 ******** 
+
+TASK [bootstrap_os : Ensure bash_completion.d folder exists] *********************************************************************************************************************************************************************
+ok: [node1]
+ok: [node3]
+ok: [master]
+ok: [node2]
+
+PLAY [Gather facts] **************************************************************************************************************************************************************************************************************
+Saturday 18 April 2026  14:56:10 +0000 (0:00:10.425)       0:03:37.229 ******** 
+
+TASK [network_facts : Gather node IPs] *******************************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  14:56:40 +0000 (0:00:29.811)       0:04:07.040 ******** 
+
+TASK [network_facts : Set computed IPs variables] ********************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  14:56:40 +0000 (0:00:00.091)       0:04:07.132 ******** 
+Saturday 18 April 2026  14:56:40 +0000 (0:00:00.026)       0:04:07.158 ******** 
+
+TASK [Gather minimal facts] ******************************************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  14:57:00 +0000 (0:00:20.601)       0:04:27.760 ******** 
+
+TASK [Gather necessary facts (network)] ******************************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  14:57:30 +0000 (0:00:30.014)       0:04:57.775 ******** 
+
+TASK [Gather necessary facts (hardware)] *****************************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+
+PLAY [Prepare for etcd install] **************************************************************************************************************************************************************************************************
+Saturday 18 April 2026  14:58:01 +0000 (0:00:30.598)       0:05:28.374 ******** 
+
+TASK [adduser : User | Create User Group] ****************************************************************************************************************************************************************************************
+ok: [node3]
+ok: [node2]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  14:58:21 +0000 (0:00:19.692)       0:05:48.066 ******** 
+
+TASK [adduser : User | Create User] **********************************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  14:58:31 +0000 (0:00:10.531)       0:05:58.598 ******** 
+
+TASK [kubernetes/preinstall : Check if /etc/fstab exists] ************************************************************************************************************************************************************************
+ok: [node3]
+ok: [node2]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  14:58:42 +0000 (0:00:10.439)       0:06:09.037 ******** 
+
+TASK [kubernetes/preinstall : Remove swapfile from /etc/fstab] *******************************************************************************************************************************************************************
+ok: [node2] => (item=swap)
+ok: [node2] => (item=none)
+ok: [node3] => (item=swap)
+ok: [node1] => (item=swap)
+ok: [master] => (item=swap)
+ok: [node3] => (item=none)
+ok: [node1] => (item=none)
+ok: [master] => (item=none)
+Saturday 18 April 2026  14:59:12 +0000 (0:00:30.016)       0:06:39.053 ******** 
+
+TASK [kubernetes/preinstall : Mask swap.target (persist swapoff)] ****************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  14:59:22 +0000 (0:00:10.657)       0:06:49.711 ******** 
+
+TASK [kubernetes/preinstall : Disable swap] **************************************************************************************************************************************************************************************
+changed: [node3]
+changed: [node2]
+changed: [node1]
+changed: [master]
+Saturday 18 April 2026  14:59:33 +0000 (0:00:10.410)       0:07:00.121 ******** 
+Saturday 18 April 2026  14:59:33 +0000 (0:00:00.050)       0:07:00.171 ******** 
+
+TASK [kubernetes/preinstall : Check resolvconf] **********************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  14:59:52 +0000 (0:00:19.346)       0:07:19.517 ******** 
+
+TASK [kubernetes/preinstall : Check existence of /etc/resolvconf/resolv.conf.d] **************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  15:00:03 +0000 (0:00:10.284)       0:07:29.802 ******** 
+
+TASK [kubernetes/preinstall : Check status of /etc/resolv.conf] ******************************************************************************************************************************************************************
+ok: [node3]
+ok: [node2]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  15:00:13 +0000 (0:00:10.334)       0:07:40.136 ******** 
+
+TASK [kubernetes/preinstall : Fetch resolv.conf] *********************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node1]
+ok: [node3]
+ok: [master]
+Saturday 18 April 2026  15:00:32 +0000 (0:00:19.656)       0:07:59.793 ******** 
+
+TASK [kubernetes/preinstall : NetworkManager | Check if host has NetworkManager] *************************************************************************************************************************************************
+ok: [node3]
+ok: [node2]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  15:00:43 +0000 (0:00:10.271)       0:08:10.064 ******** 
+
+TASK [kubernetes/preinstall : Check systemd-resolved] ****************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  15:00:53 +0000 (0:00:10.259)       0:08:20.323 ******** 
+
+TASK [kubernetes/preinstall : Set default dns if remove_default_searchdomains is false] ******************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:00:53 +0000 (0:00:00.068)       0:08:20.392 ******** 
+
+TASK [kubernetes/preinstall : Set dns facts] *************************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:00:53 +0000 (0:00:00.111)       0:08:20.504 ******** 
+
+TASK [kubernetes/preinstall : Check if kubelet is configured] ********************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  15:01:13 +0000 (0:00:19.558)       0:08:40.062 ******** 
+
+TASK [kubernetes/preinstall : Check if early DNS configuration stage] ************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:01:13 +0000 (0:00:00.077)       0:08:40.140 ******** 
+
+TASK [kubernetes/preinstall : Target resolv.conf files] **************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node3]
+ok: [node2]
+Saturday 18 April 2026  15:01:13 +0000 (0:00:00.066)       0:08:40.206 ******** 
+Saturday 18 April 2026  15:01:13 +0000 (0:00:00.124)       0:08:40.331 ******** 
+
+TASK [kubernetes/preinstall : Check if /etc/dhclient.conf exists] ****************************************************************************************************************************************************************
+ok: [node2]
+ok: [node1]
+ok: [master]
+ok: [node3]
+Saturday 18 April 2026  15:01:23 +0000 (0:00:10.286)       0:08:50.618 ******** 
+Saturday 18 April 2026  15:01:23 +0000 (0:00:00.053)       0:08:50.671 ******** 
+
+TASK [kubernetes/preinstall : Check if /etc/dhcp/dhclient.conf exists] ***********************************************************************************************************************************************************
+ok: [node3]
+ok: [node2]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  15:01:34 +0000 (0:00:10.333)       0:09:01.005 ******** 
+
+TASK [kubernetes/preinstall : Target dhclient conf file for /etc/dhcp/dhclient.conf] *********************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:01:34 +0000 (0:00:00.139)       0:09:01.144 ******** 
+Saturday 18 April 2026  15:01:34 +0000 (0:00:00.088)       0:09:01.233 ******** 
+
+TASK [kubernetes/preinstall : Target dhclient hook file for Debian family] *******************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:01:34 +0000 (0:00:00.127)       0:09:01.361 ******** 
+Saturday 18 April 2026  15:01:34 +0000 (0:00:00.051)       0:09:01.412 ******** 
+
+TASK [kubernetes/preinstall : Check /usr readonly] *******************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  15:01:53 +0000 (0:00:19.245)       0:09:20.657 ******** 
+Saturday 18 April 2026  15:01:53 +0000 (0:00:00.063)       0:09:20.720 ******** 
+Saturday 18 April 2026  15:01:53 +0000 (0:00:00.041)       0:09:20.762 ******** 
+
+TASK [kubernetes/preinstall : Stop if non systemd OS type] ***********************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node1] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node2] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node3] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:01:54 +0000 (0:00:00.128)       0:09:20.890 ******** 
+
+TASK [kubernetes/preinstall : Stop if the os does not support] *******************************************************************************************************************************************************************
+ok: [node1] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node2] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node3] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:01:54 +0000 (0:00:00.095)       0:09:20.985 ******** 
+
+TASK [kubernetes/preinstall : Stop if memory is too small for control plane nodes] ***********************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:01:54 +0000 (0:00:00.057)       0:09:21.043 ******** 
+
+TASK [kubernetes/preinstall : Stop if memory is too small for nodes] *************************************************************************************************************************************************************
+ok: [node1] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node2] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node3] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:01:54 +0000 (0:00:00.164)       0:09:21.207 ******** 
+
+TASK [kubernetes/preinstall : Stop if cgroups are not enabled on nodes] **********************************************************************************************************************************************************
+ok: [node3]
+ok: [node2]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  15:02:04 +0000 (0:00:10.269)       0:09:31.477 ******** 
+
+TASK [kubernetes/preinstall : Stop if ip var does not match local ips] ***********************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node1] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node2] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node3] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:02:04 +0000 (0:00:00.064)       0:09:31.541 ******** 
+
+TASK [kubernetes/preinstall : Stop if access_ip is not pingable] *****************************************************************************************************************************************************************
+ok: [node3]
+ok: [node2]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  15:02:15 +0000 (0:00:10.366)       0:09:41.907 ******** 
+Saturday 18 April 2026  15:02:15 +0000 (0:00:00.044)       0:09:41.952 ******** 
+Saturday 18 April 2026  15:02:15 +0000 (0:00:00.117)       0:09:42.069 ******** 
+
+TASK [kubernetes/preinstall : Stop if bad hostname] ******************************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node2] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node1] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node3] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:02:15 +0000 (0:00:00.142)       0:09:42.212 ******** 
+
+TASK [kubernetes/preinstall : Stop if /etc/resolv.conf has no configured nameservers] ********************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node1] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node3] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [node2] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:02:15 +0000 (0:00:00.152)       0:09:42.364 ******** 
+Saturday 18 April 2026  15:02:15 +0000 (0:00:00.115)       0:09:42.479 ******** 
+
+TASK [kubernetes/preinstall : Create kubernetes directories] *********************************************************************************************************************************************************************
+ok: [node2] => (item=/etc/kubernetes)
+ok: [node2] => (item=/etc/kubernetes/manifests)
+ok: [node2] => (item=/usr/local/bin/kubernetes-scripts)
+ok: [node2] => (item=/usr/libexec/kubernetes/kubelet-plugins/volume/exec)
+ok: [node3] => (item=/etc/kubernetes)
+ok: [node3] => (item=/etc/kubernetes/manifests)
+ok: [node3] => (item=/usr/local/bin/kubernetes-scripts)
+ok: [node3] => (item=/usr/libexec/kubernetes/kubelet-plugins/volume/exec)
+ok: [node1] => (item=/etc/kubernetes)
+ok: [master] => (item=/etc/kubernetes)
+ok: [node1] => (item=/etc/kubernetes/manifests)
+ok: [master] => (item=/etc/kubernetes/manifests)
+ok: [node1] => (item=/usr/local/bin/kubernetes-scripts)
+ok: [master] => (item=/usr/local/bin/kubernetes-scripts)
+ok: [node1] => (item=/usr/libexec/kubernetes/kubelet-plugins/volume/exec)
+ok: [master] => (item=/usr/libexec/kubernetes/kubelet-plugins/volume/exec)
+Saturday 18 April 2026  15:03:15 +0000 (0:00:59.335)       0:10:41.815 ******** 
+
+TASK [kubernetes/preinstall : Create other directories of root owner] ************************************************************************************************************************************************************
+ok: [node3] => (item=/etc/kubernetes/ssl)
+ok: [node3] => (item=/usr/local/bin)
+ok: [master] => (item=/etc/kubernetes/ssl)
+ok: [node2] => (item=/etc/kubernetes/ssl)
+ok: [node2] => (item=/usr/local/bin)
+ok: [node1] => (item=/etc/kubernetes/ssl)
+ok: [master] => (item=/usr/local/bin)
+ok: [node1] => (item=/usr/local/bin)
+Saturday 18 April 2026  15:03:45 +0000 (0:00:30.166)       0:11:11.981 ******** 
+
+TASK [kubernetes/preinstall : Check if kubernetes kubeadm compat cert dir exists] ************************************************************************************************************************************************
+ok: [node1]
+ok: [master]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:03:55 +0000 (0:00:10.331)       0:11:22.313 ******** 
+Saturday 18 April 2026  15:03:55 +0000 (0:00:00.052)       0:11:22.365 ******** 
+
+TASK [kubernetes/preinstall : Create cni directories] ****************************************************************************************************************************************************************************
+ok: [node2] => (item=/etc/cni/net.d)
+ok: [node3] => (item=/etc/cni/net.d)
+ok: [node2] => (item=/opt/cni/bin)
+ok: [node3] => (item=/opt/cni/bin)
+ok: [master] => (item=/etc/cni/net.d)
+ok: [node1] => (item=/etc/cni/net.d)
+ok: [node1] => (item=/opt/cni/bin)
+ok: [master] => (item=/opt/cni/bin)
+Saturday 18 April 2026  15:04:25 +0000 (0:00:29.888)       0:11:52.254 ******** 
+
+TASK [kubernetes/preinstall : Create calico cni directories] *********************************************************************************************************************************************************************
+ok: [node2] => (item=/var/lib/calico)
+ok: [node3] => (item=/var/lib/calico)
+ok: [node1] => (item=/var/lib/calico)
+ok: [master] => (item=/var/lib/calico)
+Saturday 18 April 2026  15:04:35 +0000 (0:00:10.269)       0:12:02.523 ******** 
+Saturday 18 April 2026  15:04:35 +0000 (0:00:00.070)       0:12:02.593 ******** 
+Saturday 18 April 2026  15:04:35 +0000 (0:00:00.051)       0:12:02.644 ******** 
+Saturday 18 April 2026  15:04:36 +0000 (0:00:00.173)       0:12:02.818 ******** 
+Saturday 18 April 2026  15:04:36 +0000 (0:00:00.086)       0:12:02.905 ******** 
+Saturday 18 April 2026  15:04:36 +0000 (0:00:00.113)       0:12:03.018 ******** 
+Saturday 18 April 2026  15:04:36 +0000 (0:00:00.070)       0:12:03.089 ******** 
+Saturday 18 April 2026  15:04:36 +0000 (0:00:00.134)       0:12:03.224 ******** 
+
+TASK [kubernetes/preinstall : Create systemd-resolved drop-in directory] *********************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  15:04:46 +0000 (0:00:10.274)       0:12:13.498 ******** 
+
+TASK [kubernetes/preinstall : Write Kubespray DNS settings to systemd-resolved] **************************************************************************************************************************************************
+changed: [node3]
+changed: [node2]
+changed: [node1]
+changed: [master]
+Saturday 18 April 2026  15:05:16 +0000 (0:00:29.616)       0:12:43.115 ******** 
+Saturday 18 April 2026  15:05:16 +0000 (0:00:00.050)       0:12:43.165 ******** 
+Saturday 18 April 2026  15:05:16 +0000 (0:00:00.055)       0:12:43.220 ******** 
+Saturday 18 April 2026  15:05:16 +0000 (0:00:00.090)       0:12:43.311 ******** 
+Saturday 18 April 2026  15:05:16 +0000 (0:00:00.056)       0:12:43.367 ******** 
+Saturday 18 April 2026  15:05:16 +0000 (0:00:00.139)       0:12:43.506 ******** 
+Saturday 18 April 2026  15:05:16 +0000 (0:00:00.052)       0:12:43.559 ******** 
+Saturday 18 April 2026  15:05:16 +0000 (0:00:00.135)       0:12:43.695 ******** 
+Saturday 18 April 2026  15:05:16 +0000 (0:00:00.050)       0:12:43.745 ******** 
+Saturday 18 April 2026  15:05:16 +0000 (0:00:00.053)       0:12:43.799 ******** 
+Saturday 18 April 2026  15:05:17 +0000 (0:00:00.140)       0:12:43.939 ******** 
+
+TASK [kubernetes/preinstall : Clean previously used sysctl file locations] *******************************************************************************************************************************************************
+ok: [node2] => (item=ipv4-ip_forward.conf)
+ok: [node3] => (item=ipv4-ip_forward.conf)
+ok: [node2] => (item=bridge-nf-call.conf)
+ok: [node3] => (item=bridge-nf-call.conf)
+ok: [node1] => (item=ipv4-ip_forward.conf)
+ok: [master] => (item=ipv4-ip_forward.conf)
+ok: [node1] => (item=bridge-nf-call.conf)
+ok: [master] => (item=bridge-nf-call.conf)
+Saturday 18 April 2026  15:05:46 +0000 (0:00:29.150)       0:13:13.090 ******** 
+
+TASK [kubernetes/preinstall : Stat sysctl file configuration] ********************************************************************************************************************************************************************
+ok: [node3]
+ok: [node1]
+ok: [master]
+ok: [node2]
+Saturday 18 April 2026  15:05:56 +0000 (0:00:10.351)       0:13:23.441 ******** 
+
+TASK [kubernetes/preinstall : Change sysctl file path to link source if linked] **************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:05:56 +0000 (0:00:00.193)       0:13:23.635 ******** 
+
+TASK [kubernetes/preinstall : Make sure sysctl file path folder exists] **********************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  15:06:12 +0000 (0:00:15.571)       0:13:39.206 ******** 
+
+TASK [kubernetes/preinstall : Enable ip forwarding] ******************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [node1]
+ok: [master]
+Saturday 18 April 2026  15:06:31 +0000 (0:00:19.200)       0:13:58.406 ******** 
+Saturday 18 April 2026  15:06:31 +0000 (0:00:00.065)       0:13:58.472 ******** 
+
+TASK [kubernetes/preinstall : Check if we need to set fs.may_detach_mounts] ******************************************************************************************************************************************************
+ok: [node3]
+ok: [node2]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  15:06:42 +0000 (0:00:10.786)       0:14:09.259 ******** 
+Saturday 18 April 2026  15:06:42 +0000 (0:00:00.068)       0:14:09.327 ******** 
+
+TASK [kubernetes/preinstall : Ensure kubelet expected parameters are set] ********************************************************************************************************************************************************
+ok: [node3] => (item={'name': 'kernel.keys.root_maxbytes', 'value': 25000000})
+ok: [node3] => (item={'name': 'kernel.keys.root_maxkeys', 'value': 1000000})
+ok: [node3] => (item={'name': 'kernel.panic', 'value': 10})
+ok: [node3] => (item={'name': 'kernel.panic_on_oops', 'value': 1})
+ok: [node3] => (item={'name': 'vm.overcommit_memory', 'value': 1})
+ok: [node3] => (item={'name': 'vm.panic_on_oom', 'value': 0})
+ok: [node2] => (item={'name': 'kernel.keys.root_maxbytes', 'value': 25000000})
+ok: [node1] => (item={'name': 'kernel.keys.root_maxbytes', 'value': 25000000})
+ok: [node2] => (item={'name': 'kernel.keys.root_maxkeys', 'value': 1000000})
+ok: [node2] => (item={'name': 'kernel.panic', 'value': 10})
+ok: [node2] => (item={'name': 'kernel.panic_on_oops', 'value': 1})
+ok: [node2] => (item={'name': 'vm.overcommit_memory', 'value': 1})
+ok: [node2] => (item={'name': 'vm.panic_on_oom', 'value': 0})
+ok: [master] => (item={'name': 'kernel.keys.root_maxbytes', 'value': 25000000})
+ok: [node1] => (item={'name': 'kernel.keys.root_maxkeys', 'value': 1000000})
+ok: [master] => (item={'name': 'kernel.keys.root_maxkeys', 'value': 1000000})
+ok: [node1] => (item={'name': 'kernel.panic', 'value': 10})
+ok: [master] => (item={'name': 'kernel.panic', 'value': 10})
+ok: [node1] => (item={'name': 'kernel.panic_on_oops', 'value': 1})
+ok: [master] => (item={'name': 'kernel.panic_on_oops', 'value': 1})
+ok: [node1] => (item={'name': 'vm.overcommit_memory', 'value': 1})
+ok: [master] => (item={'name': 'vm.overcommit_memory', 'value': 1})
+ok: [node1] => (item={'name': 'vm.panic_on_oom', 'value': 0})
+ok: [master] => (item={'name': 'vm.panic_on_oom', 'value': 0})
+Saturday 18 April 2026  15:08:06 +0000 (0:01:24.362)       0:15:33.689 ******** 
+
+TASK [kubernetes/preinstall : Check dummy module] ********************************************************************************************************************************************************************************
+ok: [node3]
+ok: [node2]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  15:08:23 +0000 (0:00:16.239)       0:15:49.929 ******** 
+Saturday 18 April 2026  15:08:23 +0000 (0:00:00.061)       0:15:49.991 ******** 
+
+TASK [kubernetes/preinstall : Disable fapolicyd service] *************************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  15:08:33 +0000 (0:00:10.451)       0:16:00.443 ******** 
+Saturday 18 April 2026  15:08:33 +0000 (0:00:00.070)       0:16:00.513 ******** 
+Saturday 18 April 2026  15:08:33 +0000 (0:00:00.066)       0:16:00.580 ******** 
+Saturday 18 April 2026  15:08:33 +0000 (0:00:00.132)       0:16:00.713 ******** 
+Saturday 18 April 2026  15:08:33 +0000 (0:00:00.053)       0:16:00.766 ******** 
+Saturday 18 April 2026  15:08:34 +0000 (0:00:00.126)       0:16:00.892 ******** 
+Saturday 18 April 2026  15:08:34 +0000 (0:00:00.049)       0:16:00.941 ******** 
+Saturday 18 April 2026  15:08:34 +0000 (0:00:00.058)       0:16:01.000 ******** 
+Saturday 18 April 2026  15:08:34 +0000 (0:00:00.080)       0:16:01.080 ******** 
+Saturday 18 April 2026  15:08:34 +0000 (0:00:00.046)       0:16:01.126 ******** 
+Saturday 18 April 2026  15:08:34 +0000 (0:00:00.079)       0:16:01.206 ******** 
+Saturday 18 April 2026  15:08:34 +0000 (0:00:00.053)       0:16:01.260 ******** 
+
+TASK [kubernetes/preinstall : Configure dhclient to supersede search/domain/nameservers] *****************************************************************************************************************************************
+ok: [node1]
+ok: [node3]
+ok: [node2]
+ok: [master]
+Saturday 18 April 2026  15:08:52 +0000 (0:00:17.938)       0:16:19.198 ******** 
+
+TASK [kubernetes/preinstall : Configure dhclient hooks for resolv.conf (non-RH)] *************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  15:09:18 +0000 (0:00:26.118)       0:16:45.317 ******** 
+Saturday 18 April 2026  15:09:18 +0000 (0:00:00.059)       0:16:45.376 ******** 
+Saturday 18 April 2026  15:09:18 +0000 (0:00:00.042)       0:16:45.419 ******** 
+Saturday 18 April 2026  15:09:18 +0000 (0:00:00.103)       0:16:45.523 ******** 
+Saturday 18 April 2026  15:09:18 +0000 (0:00:00.009)       0:16:45.533 ******** 
+Saturday 18 April 2026  15:09:18 +0000 (0:00:00.011)       0:16:45.545 ******** 
+Saturday 18 April 2026  15:09:18 +0000 (0:00:00.011)       0:16:45.556 ******** 
+Saturday 18 April 2026  15:09:18 +0000 (0:00:00.006)       0:16:45.563 ******** 
+
+RUNNING HANDLER [kubernetes/preinstall : Preinstall | Restart systemd-resolved] **************************************************************************************************************************************************
+changed: [node2]
+changed: [node3]
+changed: [node1]
+changed: [master]
+Saturday 18 April 2026  15:09:29 +0000 (0:00:10.876)       0:16:56.440 ******** 
+
+TASK [kubernetes/preinstall : Check if we are running inside a Azure VM] *********************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:09:30 +0000 (0:00:00.379)       0:16:56.819 ******** 
+
+TASK [Run calico checks] *********************************************************************************************************************************************************************************************************
+included: network_plugin/calico for master, node1, node2, node3
+Saturday 18 April 2026  15:09:30 +0000 (0:00:00.380)       0:16:57.200 ******** 
+
+TASK [network_plugin/calico : Stop if legacy encapsulation variables are detected (ipip)] ****************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:09:30 +0000 (0:00:00.061)       0:16:57.261 ******** 
+
+TASK [network_plugin/calico : Stop if legacy encapsulation variables are detected (ipip_mode)] ***********************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:09:30 +0000 (0:00:00.081)       0:16:57.342 ******** 
+
+TASK [network_plugin/calico : Stop if legacy encapsulation variables are detected (calcio_ipam_autoallocateblocks)] **************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:09:30 +0000 (0:00:00.036)       0:16:57.379 ******** 
+
+TASK [network_plugin/calico : Stop if supported Calico versions] *****************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:09:30 +0000 (0:00:00.039)       0:16:57.419 ******** 
+
+TASK [network_plugin/calico : Check if calicoctl.sh exists] **********************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:09:31 +0000 (0:00:00.395)       0:16:57.814 ******** 
+
+TASK [network_plugin/calico : Check if calico ready] *****************************************************************************************************************************************************************************
+changed: [master]
+Saturday 18 April 2026  15:09:32 +0000 (0:00:01.311)       0:16:59.125 ******** 
+
+TASK [network_plugin/calico : Get current calico version] ************************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:09:32 +0000 (0:00:00.319)       0:16:59.445 ******** 
+
+TASK [network_plugin/calico : Assert that current calico version is enough for upgrade] ******************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:09:32 +0000 (0:00:00.044)       0:16:59.490 ******** 
+Saturday 18 April 2026  15:09:32 +0000 (0:00:00.028)       0:16:59.519 ******** 
+Saturday 18 April 2026  15:09:32 +0000 (0:00:00.030)       0:16:59.549 ******** 
+
+TASK [network_plugin/calico : Check vars defined correctly] **********************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:09:32 +0000 (0:00:00.087)       0:16:59.636 ******** 
+
+TASK [network_plugin/calico : Check calico network backend defined correctly] ****************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:09:32 +0000 (0:00:00.041)       0:16:59.678 ******** 
+
+TASK [network_plugin/calico : Check ipip and vxlan mode defined correctly] *******************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:09:32 +0000 (0:00:00.093)       0:16:59.771 ******** 
+Saturday 18 April 2026  15:09:32 +0000 (0:00:00.022)       0:16:59.794 ******** 
+
+TASK [network_plugin/calico : Check ipip and vxlan mode if simultaneously enabled] ***********************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:09:33 +0000 (0:00:00.039)       0:16:59.834 ******** 
+
+TASK [network_plugin/calico : Get Calico default-pool configuration] *************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:09:33 +0000 (0:00:00.345)       0:17:00.179 ******** 
+
+TASK [network_plugin/calico : Set calico_pool_conf] ******************************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:09:33 +0000 (0:00:00.047)       0:17:00.227 ******** 
+
+TASK [network_plugin/calico : Check if inventory match current cluster configuration] ********************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:09:33 +0000 (0:00:00.050)       0:17:00.277 ******** 
+Saturday 18 April 2026  15:09:33 +0000 (0:00:00.031)       0:17:00.309 ******** 
+Saturday 18 April 2026  15:09:33 +0000 (0:00:00.058)       0:17:00.368 ******** 
+Saturday 18 April 2026  15:09:33 +0000 (0:00:00.028)       0:17:00.396 ******** 
+Saturday 18 April 2026  15:09:33 +0000 (0:00:00.024)       0:17:00.420 ******** 
+Saturday 18 April 2026  15:09:33 +0000 (0:00:00.026)       0:17:00.447 ******** 
+Saturday 18 April 2026  15:09:33 +0000 (0:00:00.114)       0:17:00.562 ******** 
+
+TASK [container-engine/validate-container-engine : Validate-container-engine | check if fedora coreos] ***************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:09:34 +0000 (0:00:00.404)       0:17:00.966 ******** 
+
+TASK [container-engine/validate-container-engine : Validate-container-engine | set is_ostree] ************************************************************************************************************************************
+ok: [master]
+ok: [node2]
+ok: [node1]
+ok: [node3]
+Saturday 18 April 2026  15:09:34 +0000 (0:00:00.110)       0:17:01.077 ******** 
+
+TASK [container-engine/validate-container-engine : Ensure kubelet systemd unit exists] *******************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:09:34 +0000 (0:00:00.336)       0:17:01.413 ******** 
+
+TASK [container-engine/validate-container-engine : Populate service facts] *******************************************************************************************************************************************************
+ok: [node2]
+ok: [node1]
+ok: [node3]
+ok: [master]
+Saturday 18 April 2026  15:09:37 +0000 (0:00:03.360)       0:17:04.774 ******** 
+
+TASK [container-engine/validate-container-engine : Check if containerd is installed] *********************************************************************************************************************************************
+ok: [node2]
+ok: [node1]
+ok: [node3]
+ok: [master]
+Saturday 18 April 2026  15:09:38 +0000 (0:00:00.428)       0:17:05.202 ******** 
+
+TASK [container-engine/validate-container-engine : Check if docker is installed] *************************************************************************************************************************************************
+ok: [master]
+ok: [node2]
+ok: [node1]
+ok: [node3]
+Saturday 18 April 2026  15:09:38 +0000 (0:00:00.345)       0:17:05.548 ******** 
+
+TASK [container-engine/validate-container-engine : Check if crio is installed] ***************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:09:39 +0000 (0:00:00.299)       0:17:05.847 ******** 
+Saturday 18 April 2026  15:09:39 +0000 (0:00:00.070)       0:17:05.918 ******** 
+Saturday 18 April 2026  15:09:39 +0000 (0:00:00.063)       0:17:05.981 ******** 
+Saturday 18 April 2026  15:09:39 +0000 (0:00:00.164)       0:17:06.145 ******** 
+Saturday 18 April 2026  15:09:39 +0000 (0:00:00.128)       0:17:06.274 ******** 
+Saturday 18 April 2026  15:09:39 +0000 (0:00:00.126)       0:17:06.400 ******** 
+Saturday 18 April 2026  15:09:39 +0000 (0:00:00.115)       0:17:06.516 ******** 
+Saturday 18 April 2026  15:09:39 +0000 (0:00:00.074)       0:17:06.591 ******** 
+Saturday 18 April 2026  15:09:39 +0000 (0:00:00.079)       0:17:06.670 ******** 
+Saturday 18 April 2026  15:09:39 +0000 (0:00:00.089)       0:17:06.759 ******** 
+Saturday 18 April 2026  15:09:40 +0000 (0:00:00.062)       0:17:06.822 ******** 
+Saturday 18 April 2026  15:09:40 +0000 (0:00:00.111)       0:17:06.934 ******** 
+Saturday 18 April 2026  15:09:40 +0000 (0:00:00.122)       0:17:07.057 ******** 
+Saturday 18 April 2026  15:09:40 +0000 (0:00:00.062)       0:17:07.119 ******** 
+Saturday 18 April 2026  15:09:40 +0000 (0:00:00.129)       0:17:07.248 ******** 
+Saturday 18 April 2026  15:09:40 +0000 (0:00:00.068)       0:17:07.316 ******** 
+Saturday 18 April 2026  15:09:40 +0000 (0:00:00.094)       0:17:07.411 ******** 
+Saturday 18 April 2026  15:09:40 +0000 (0:00:00.068)       0:17:07.480 ******** 
+Saturday 18 April 2026  15:09:40 +0000 (0:00:00.145)       0:17:07.625 ******** 
+Saturday 18 April 2026  15:09:40 +0000 (0:00:00.071)       0:17:07.696 ******** 
+Saturday 18 April 2026  15:09:41 +0000 (0:00:00.131)       0:17:07.828 ******** 
+Saturday 18 April 2026  15:09:41 +0000 (0:00:00.061)       0:17:07.890 ******** 
+Saturday 18 April 2026  15:09:41 +0000 (0:00:00.112)       0:17:08.003 ******** 
+Saturday 18 April 2026  15:09:41 +0000 (0:00:00.068)       0:17:08.071 ******** 
+Saturday 18 April 2026  15:09:41 +0000 (0:00:00.097)       0:17:08.168 ******** 
+Saturday 18 April 2026  15:09:41 +0000 (0:00:00.116)       0:17:08.285 ******** 
+Saturday 18 April 2026  15:09:41 +0000 (0:00:00.065)       0:17:08.351 ******** 
+Saturday 18 April 2026  15:09:41 +0000 (0:00:00.107)       0:17:08.458 ******** 
+Saturday 18 April 2026  15:09:41 +0000 (0:00:00.067)       0:17:08.525 ******** 
+Saturday 18 April 2026  15:09:41 +0000 (0:00:00.090)       0:17:08.616 ******** 
+Saturday 18 April 2026  15:09:41 +0000 (0:00:00.089)       0:17:08.705 ******** 
+Saturday 18 April 2026  15:09:42 +0000 (0:00:00.181)       0:17:08.886 ******** 
+Saturday 18 April 2026  15:09:42 +0000 (0:00:00.070)       0:17:08.957 ******** 
+Saturday 18 April 2026  15:09:42 +0000 (0:00:00.108)       0:17:09.066 ******** 
+Saturday 18 April 2026  15:09:42 +0000 (0:00:00.071)       0:17:09.137 ******** 
+Saturday 18 April 2026  15:09:42 +0000 (0:00:00.132)       0:17:09.269 ******** 
+Saturday 18 April 2026  15:09:42 +0000 (0:00:00.126)       0:17:09.396 ******** 
+Saturday 18 April 2026  15:09:42 +0000 (0:00:00.107)       0:17:09.504 ******** 
+Saturday 18 April 2026  15:09:42 +0000 (0:00:00.091)       0:17:09.596 ******** 
+Saturday 18 April 2026  15:09:42 +0000 (0:00:00.105)       0:17:09.701 ******** 
+Saturday 18 April 2026  15:09:42 +0000 (0:00:00.069)       0:17:09.770 ******** 
+Saturday 18 April 2026  15:09:43 +0000 (0:00:00.136)       0:17:09.906 ******** 
+Saturday 18 April 2026  15:09:43 +0000 (0:00:00.099)       0:17:10.006 ******** 
+Saturday 18 April 2026  15:09:43 +0000 (0:00:00.065)       0:17:10.071 ******** 
+Saturday 18 April 2026  15:09:43 +0000 (0:00:00.062)       0:17:10.133 ******** 
+Saturday 18 April 2026  15:09:43 +0000 (0:00:00.108)       0:17:10.242 ******** 
+Saturday 18 April 2026  15:09:43 +0000 (0:00:00.077)       0:17:10.319 ******** 
+Saturday 18 April 2026  15:09:43 +0000 (0:00:00.092)       0:17:10.411 ******** 
+Saturday 18 April 2026  15:09:43 +0000 (0:00:00.118)       0:17:10.530 ******** 
+Saturday 18 April 2026  15:09:43 +0000 (0:00:00.066)       0:17:10.596 ******** 
+Saturday 18 April 2026  15:09:43 +0000 (0:00:00.122)       0:17:10.718 ******** 
+Saturday 18 April 2026  15:09:43 +0000 (0:00:00.064)       0:17:10.782 ******** 
+Saturday 18 April 2026  15:09:44 +0000 (0:00:00.099)       0:17:10.882 ******** 
+Saturday 18 April 2026  15:09:44 +0000 (0:00:00.068)       0:17:10.951 ******** 
+Saturday 18 April 2026  15:09:44 +0000 (0:00:00.070)       0:17:11.021 ******** 
+Saturday 18 April 2026  15:09:44 +0000 (0:00:00.113)       0:17:11.135 ******** 
+Saturday 18 April 2026  15:09:44 +0000 (0:00:00.079)       0:17:11.214 ******** 
+Saturday 18 April 2026  15:09:44 +0000 (0:00:00.146)       0:17:11.361 ******** 
+Saturday 18 April 2026  15:09:44 +0000 (0:00:00.109)       0:17:11.470 ******** 
+Saturday 18 April 2026  15:09:44 +0000 (0:00:00.128)       0:17:11.599 ******** 
+Saturday 18 April 2026  15:09:44 +0000 (0:00:00.145)       0:17:11.745 ******** 
+Saturday 18 April 2026  15:09:45 +0000 (0:00:00.305)       0:17:12.050 ******** 
+
+TASK [Container Manager] *********************************************************************************************************************************************************************************************************
+included: container-engine/containerd for master, node1, node2, node3
+Saturday 18 April 2026  15:09:45 +0000 (0:00:00.333)       0:17:12.384 ******** 
+
+TASK [container-engine/containerd-common : Containerd-common | check if fedora coreos] *******************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:09:45 +0000 (0:00:00.326)       0:17:12.710 ******** 
+
+TASK [container-engine/containerd-common : Containerd-common | set is_ostree] ****************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:09:45 +0000 (0:00:00.075)       0:17:12.786 ******** 
+Saturday 18 April 2026  15:09:46 +0000 (0:00:00.138)       0:17:12.924 ******** 
+
+TASK [container-engine/runc : Runc | check if fedora coreos] *********************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:09:46 +0000 (0:00:00.310)       0:17:13.235 ******** 
+
+TASK [container-engine/runc : Runc | set is_ostree] ******************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:09:46 +0000 (0:00:00.132)       0:17:13.367 ******** 
+
+TASK [container-engine/runc : Runc | Remove package] *****************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:09:47 +0000 (0:00:00.766)       0:17:14.133 ******** 
+
+TASK [container-engine/runc : Runc | Remove orphaned binary] *********************************************************************************************************************************************************************
+ok: [node1]
+ok: [node2]
+ok: [master]
+ok: [node3]
+Saturday 18 April 2026  15:09:47 +0000 (0:00:00.379)       0:17:14.513 ******** 
+
+TASK [container-engine/runc : Runc | Download runc binary] ***********************************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/container-engine/runc/tasks/../../../download/tasks/download_file.yml for master, node1, node2, node3
+Saturday 18 April 2026  15:09:47 +0000 (0:00:00.108)       0:17:14.621 ******** 
+
+TASK [container-engine/runc : Prep_download | Set a few facts] *******************************************************************************************************************************************************************
+ok: [node1]
+ok: [node2]
+ok: [master]
+ok: [node3]
+Saturday 18 April 2026  15:09:48 +0000 (0:00:00.454)       0:17:15.076 ******** 
+Saturday 18 April 2026  15:09:48 +0000 (0:00:00.114)       0:17:15.190 ******** 
+
+TASK [container-engine/runc : Download_file | Set pathname of cached file] *******************************************************************************************************************************************************
+ok: [node1]
+ok: [node2]
+ok: [master]
+ok: [node3]
+Saturday 18 April 2026  15:09:49 +0000 (0:00:00.764)       0:17:15.955 ******** 
+
+TASK [container-engine/runc : Download_file | Create dest directory on node] *****************************************************************************************************************************************************
+changed: [master]
+changed: [node1]
+changed: [node2]
+changed: [node3]
+Saturday 18 April 2026  15:09:50 +0000 (0:00:01.498)       0:17:17.453 ******** 
+Saturday 18 April 2026  15:09:50 +0000 (0:00:00.022)       0:17:17.476 ******** 
+Saturday 18 April 2026  15:09:50 +0000 (0:00:00.041)       0:17:17.517 ******** 
+
+TASK [container-engine/runc : Download_file | Download item] *********************************************************************************************************************************************************************
+changed: [node1]
+FAILED - RETRYING: [node3]: Download_file | Download item (4 retries left).
+FAILED - RETRYING: [master]: Download_file | Download item (4 retries left).
+changed: [node2]
+changed: [node3]
+changed: [master]
+Saturday 18 April 2026  15:10:10 +0000 (0:00:19.963)       0:17:37.481 ******** 
+Saturday 18 April 2026  15:10:10 +0000 (0:00:00.119)       0:17:37.601 ******** 
+Saturday 18 April 2026  15:10:10 +0000 (0:00:00.119)       0:17:37.720 ******** 
+Saturday 18 April 2026  15:10:11 +0000 (0:00:00.087)       0:17:37.807 ******** 
+
+TASK [container-engine/runc : Download_file | Extract file archives] *************************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/extract_file.yml for master, node1, node2, node3
+Saturday 18 April 2026  15:10:11 +0000 (0:00:00.109)       0:17:37.917 ******** 
+Saturday 18 April 2026  15:10:12 +0000 (0:00:00.896)       0:17:38.814 ******** 
+
+TASK [container-engine/runc : Copy runc binary from download dir] ****************************************************************************************************************************************************************
+ok: [node2]
+ok: [node3]
+ok: [master]
+ok: [node1]
+Saturday 18 April 2026  15:10:13 +0000 (0:00:01.141)       0:17:39.956 ******** 
+
+TASK [container-engine/crictl : Crictl | Download crictl] ************************************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/container-engine/crictl/tasks/../../../download/tasks/download_file.yml for master, node1, node2, node3
+Saturday 18 April 2026  15:10:13 +0000 (0:00:00.103)       0:17:40.059 ******** 
+
+TASK [container-engine/crictl : Prep_download | Set a few facts] *****************************************************************************************************************************************************************
+ok: [node1]
+ok: [node3]
+ok: [master]
+ok: [node2]
+Saturday 18 April 2026  15:10:13 +0000 (0:00:00.584)       0:17:40.643 ******** 
+Saturday 18 April 2026  15:10:13 +0000 (0:00:00.068)       0:17:40.712 ******** 
+
+TASK [container-engine/crictl : Download_file | Set pathname of cached file] *****************************************************************************************************************************************************
+ok: [master]
+ok: [node2]
+ok: [node1]
+ok: [node3]
+Saturday 18 April 2026  15:10:14 +0000 (0:00:00.820)       0:17:41.532 ******** 
+
+TASK [container-engine/crictl : Download_file | Create dest directory on node] ***************************************************************************************************************************************************
+ok: [master]
+ok: [node2]
+ok: [node1]
+ok: [node3]
+Saturday 18 April 2026  15:10:16 +0000 (0:00:01.291)       0:17:42.823 ******** 
+Saturday 18 April 2026  15:10:16 +0000 (0:00:00.027)       0:17:42.851 ******** 
+Saturday 18 April 2026  15:10:16 +0000 (0:00:00.079)       0:17:42.930 ******** 
+
+TASK [container-engine/crictl : Download_file | Download item] *******************************************************************************************************************************************************************
+changed: [node1]
+changed: [node2]
+changed: [node3]
+changed: [master]
+Saturday 18 April 2026  15:10:23 +0000 (0:00:07.209)       0:17:50.139 ******** 
+Saturday 18 April 2026  15:10:23 +0000 (0:00:00.067)       0:17:50.207 ******** 
+Saturday 18 April 2026  15:10:23 +0000 (0:00:00.071)       0:17:50.279 ******** 
+Saturday 18 April 2026  15:10:23 +0000 (0:00:00.063)       0:17:50.343 ******** 
+
+TASK [container-engine/crictl : Download_file | Extract file archives] ***********************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/extract_file.yml for master, node1, node2, node3
+Saturday 18 April 2026  15:10:23 +0000 (0:00:00.161)       0:17:50.504 ******** 
+
+TASK [container-engine/crictl : Extract_file | Unpacking archive] ****************************************************************************************************************************************************************
+changed: [node2]
+changed: [node1]
+changed: [master]
+changed: [node3]
+Saturday 18 April 2026  15:10:27 +0000 (0:00:03.824)       0:17:54.328 ******** 
+
+TASK [container-engine/crictl : Install crictl config] ***************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:10:28 +0000 (0:00:00.743)       0:17:55.072 ******** 
+
+TASK [container-engine/crictl : Copy crictl binary from download dir] ************************************************************************************************************************************************************
+ok: [master]
+ok: [node2]
+ok: [node1]
+ok: [node3]
+Saturday 18 April 2026  15:10:30 +0000 (0:00:02.010)       0:17:57.083 ******** 
+
+TASK [container-engine/nerdctl : Nerdctl | Download nerdctl] *********************************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/container-engine/nerdctl/tasks/../../../download/tasks/download_file.yml for master, node1, node2, node3
+Saturday 18 April 2026  15:10:30 +0000 (0:00:00.090)       0:17:57.174 ******** 
+
+TASK [container-engine/nerdctl : Prep_download | Set a few facts] ****************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:10:30 +0000 (0:00:00.564)       0:17:57.739 ******** 
+Saturday 18 April 2026  15:10:31 +0000 (0:00:00.129)       0:17:57.868 ******** 
+
+TASK [container-engine/nerdctl : Download_file | Set pathname of cached file] ****************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:10:31 +0000 (0:00:00.711)       0:17:58.580 ******** 
+
+TASK [container-engine/nerdctl : Download_file | Create dest directory on node] **************************************************************************************************************************************************
+ok: [node1]
+ok: [node3]
+ok: [master]
+ok: [node2]
+Saturday 18 April 2026  15:10:33 +0000 (0:00:01.421)       0:18:00.002 ******** 
+Saturday 18 April 2026  15:10:33 +0000 (0:00:00.062)       0:18:00.065 ******** 
+Saturday 18 April 2026  15:10:33 +0000 (0:00:00.034)       0:18:00.099 ******** 
+
+TASK [container-engine/nerdctl : Download_file | Download item] ******************************************************************************************************************************************************************
+changed: [node2]
+changed: [node1]
+changed: [master]
+changed: [node3]
+Saturday 18 April 2026  15:10:38 +0000 (0:00:05.146)       0:18:05.245 ******** 
+Saturday 18 April 2026  15:10:38 +0000 (0:00:00.098)       0:18:05.344 ******** 
+Saturday 18 April 2026  15:10:38 +0000 (0:00:00.102)       0:18:05.446 ******** 
+Saturday 18 April 2026  15:10:38 +0000 (0:00:00.071)       0:18:05.517 ******** 
+
+TASK [container-engine/nerdctl : Download_file | Extract file archives] **********************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/extract_file.yml for master, node1, node2, node3
+Saturday 18 April 2026  15:10:38 +0000 (0:00:00.184)       0:18:05.701 ******** 
+
+TASK [container-engine/nerdctl : Extract_file | Unpacking archive] ***************************************************************************************************************************************************************
+changed: [node1]
+changed: [node2]
+changed: [master]
+changed: [node3]
+Saturday 18 April 2026  15:10:42 +0000 (0:00:03.634)       0:18:09.336 ******** 
+
+TASK [container-engine/nerdctl : Nerdctl | Copy nerdctl binary from download dir] ************************************************************************************************************************************************
+ok: [master]
+ok: [node2]
+ok: [node1]
+ok: [node3]
+Saturday 18 April 2026  15:10:44 +0000 (0:00:02.103)       0:18:11.439 ******** 
+
+TASK [container-engine/nerdctl : Nerdctl | Create configuration dir] *************************************************************************************************************************************************************
+ok: [node1]
+ok: [master]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:10:44 +0000 (0:00:00.295)       0:18:11.735 ******** 
+
+TASK [container-engine/nerdctl : Nerdctl | Install nerdctl configuration] ********************************************************************************************************************************************************
+ok: [node1]
+ok: [master]
+ok: [node3]
+ok: [node2]
+Saturday 18 April 2026  15:10:45 +0000 (0:00:00.888)       0:18:12.624 ******** 
+
+TASK [container-engine/containerd : Containerd | Download containerd] ************************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/container-engine/containerd/tasks/../../../download/tasks/download_file.yml for master, node1, node2, node3
+Saturday 18 April 2026  15:10:46 +0000 (0:00:00.203)       0:18:12.828 ******** 
+
+TASK [container-engine/containerd : Prep_download | Set a few facts] *************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:10:46 +0000 (0:00:00.409)       0:18:13.238 ******** 
+Saturday 18 April 2026  15:10:46 +0000 (0:00:00.123)       0:18:13.361 ******** 
+
+TASK [container-engine/containerd : Download_file | Set pathname of cached file] *************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:10:47 +0000 (0:00:00.896)       0:18:14.257 ******** 
+
+TASK [container-engine/containerd : Download_file | Create dest directory on node] ***********************************************************************************************************************************************
+ok: [node1]
+ok: [master]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:10:49 +0000 (0:00:01.565)       0:18:15.823 ******** 
+Saturday 18 April 2026  15:10:49 +0000 (0:00:00.056)       0:18:15.879 ******** 
+Saturday 18 April 2026  15:10:49 +0000 (0:00:00.034)       0:18:15.913 ******** 
+
+TASK [container-engine/containerd : Download_file | Download item] ***************************************************************************************************************************************************************
+changed: [node2]
+changed: [node3]
+changed: [node1]
+changed: [master]
+Saturday 18 April 2026  15:10:54 +0000 (0:00:05.302)       0:18:21.216 ******** 
+Saturday 18 April 2026  15:10:54 +0000 (0:00:00.083)       0:18:21.299 ******** 
+Saturday 18 April 2026  15:10:54 +0000 (0:00:00.145)       0:18:21.444 ******** 
+Saturday 18 April 2026  15:10:54 +0000 (0:00:00.064)       0:18:21.508 ******** 
+
+TASK [container-engine/containerd : Download_file | Extract file archives] *******************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/extract_file.yml for master, node1, node2, node3
+Saturday 18 April 2026  15:10:54 +0000 (0:00:00.173)       0:18:21.682 ******** 
+Saturday 18 April 2026  15:10:55 +0000 (0:00:00.898)       0:18:22.581 ******** 
+
+TASK [container-engine/containerd : Containerd | Unpack containerd archive] ******************************************************************************************************************************************************
+ok: [node1]
+ok: [master]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:11:00 +0000 (0:00:05.038)       0:18:27.619 ******** 
+
+TASK [container-engine/containerd : Containerd | Generate systemd service for containerd] ****************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:11:01 +0000 (0:00:00.689)       0:18:28.309 ******** 
+
+TASK [container-engine/containerd : Containerd | Ensure containerd directories exist] ********************************************************************************************************************************************
+ok: [master] => (item=/etc/systemd/system/containerd.service.d)
+ok: [node1] => (item=/etc/systemd/system/containerd.service.d)
+ok: [node2] => (item=/etc/systemd/system/containerd.service.d)
+ok: [node3] => (item=/etc/systemd/system/containerd.service.d)
+ok: [node1] => (item=/etc/containerd)
+ok: [master] => (item=/etc/containerd)
+ok: [node2] => (item=/etc/containerd)
+ok: [node3] => (item=/etc/containerd)
+Saturday 18 April 2026  15:11:02 +0000 (0:00:00.601)       0:18:28.910 ******** 
+Saturday 18 April 2026  15:11:02 +0000 (0:00:00.118)       0:18:29.029 ******** 
+
+TASK [container-engine/containerd : Containerd | Generate default base_runtime_spec] *********************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:11:02 +0000 (0:00:00.347)       0:18:29.376 ******** 
+
+TASK [container-engine/containerd : Containerd | Store generated default base_runtime_spec] **************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:11:02 +0000 (0:00:00.090)       0:18:29.467 ******** 
+
+TASK [container-engine/containerd : Containerd | Write base_runtime_specs] *******************************************************************************************************************************************************
+ok: [node1] => (item={'key': 'cri-base.json', 'value': {'ociVersion': '1.3.0', 'process': {'user': {'uid': 0, 'gid': 0}, 'cwd': '/', 'capabilities': {'bounding': ['CAP_CHOWN', 'CAP_DAC_OVERRIDE', 'CAP_FSETID', 'CAP_FOWNER', 'CAP_MKNOD', 'CAP_NET_RAW', 'CAP_SETGID', 'CAP_SETUID', 'CAP_SETFCAP', 'CAP_SETPCAP', 'CAP_NET_BIND_SERVICE', 'CAP_SYS_CHROOT', 'CAP_KILL', 'CAP_AUDIT_WRITE'], 'effective': ['CAP_CHOWN', 'CAP_DAC_OVERRIDE', 'CAP_FSETID', 'CAP_FOWNER', 'CAP_MKNOD', 'CAP_NET_RAW', 'CAP_SETGID', 'CAP_SETUID', 'CAP_SETFCAP', 'CAP_SETPCAP', 'CAP_NET_BIND_SERVICE', 'CAP_SYS_CHROOT', 'CAP_KILL', 'CAP_AUDIT_WRITE'], 'permitted': ['CAP_CHOWN', 'CAP_DAC_OVERRIDE', 'CAP_FSETID', 'CAP_FOWNER', 'CAP_MKNOD', 'CAP_NET_RAW', 'CAP_SETGID', 'CAP_SETUID', 'CAP_SETFCAP', 'CAP_SETPCAP', 'CAP_NET_BIND_SERVICE', 'CAP_SYS_CHROOT', 'CAP_KILL', 'CAP_AUDIT_WRITE']}, 'rlimits': [{'type': 'RLIMIT_NOFILE', 'hard': 65535, 'soft': 65535}], 'noNewPrivileges': True}, 'root': {'path': 'rootfs'}, 'mounts': [{'destination': '/proc', 'type': 'proc', 'source': 'proc', 'options': ['nosuid', 'noexec', 'nodev']}, {'destination': '/dev', 'type': 'tmpfs', 'source': 'tmpfs', 'options': ['nosuid', 'strictatime', 'mode=755', 'size=65536k']}, {'destination': '/dev/pts', 'type': 'devpts', 'source': 'devpts', 'options': ['nosuid', 'noexec', 'newinstance', 'ptmxmode=0666', 'mode=0620', 'gid=5']}, {'destination': '/dev/shm', 'type': 'tmpfs', 'source': 'shm', 'options': ['nosuid', 'noexec', 'nodev', 'mode=1777', 'size=65536k']}, {'destination': '/dev/mqueue', 'type': 'mqueue', 'source': 'mqueue', 'options': ['nosuid', 'noexec', 'nodev']}, {'destination': '/sys', 'type': 'sysfs', 'source': 'sysfs', 'options': ['nosuid', 'noexec', 'nodev', 'ro']}, {'destination': '/run', 'type': 'tmpfs', 'source': 'tmpfs', 'options': ['nosuid', 'strictatime', 'mode=755', 'size=65536k']}], 'linux': {'resources': {'devices': [{'allow': False, 'access': 'rwm'}]}, 'cgroupsPath': '/default', 'namespaces': [{'type': 'pid'}, {'type': 'ipc'}, {'type': 'uts'}, {'type': 'mount'}, {'type': 'network'}], 'maskedPaths': ['/proc/acpi', '/proc/asound', '/proc/kcore', '/proc/keys', '/proc/latency_stats', '/proc/timer_list', '/proc/timer_stats', '/proc/sched_debug', '/sys/firmware', '/sys/devices/virtual/powercap', '/proc/scsi'], 'readonlyPaths': ['/proc/bus', '/proc/fs', '/proc/irq', '/proc/sys', '/proc/sysrq-trigger']}}})
+ok: [node3] => (item={'key': 'cri-base.json', 'value': {'ociVersion': '1.3.0', 'process': {'user': {'uid': 0, 'gid': 0}, 'cwd': '/', 'capabilities': {'bounding': ['CAP_CHOWN', 'CAP_DAC_OVERRIDE', 'CAP_FSETID', 'CAP_FOWNER', 'CAP_MKNOD', 'CAP_NET_RAW', 'CAP_SETGID', 'CAP_SETUID', 'CAP_SETFCAP', 'CAP_SETPCAP', 'CAP_NET_BIND_SERVICE', 'CAP_SYS_CHROOT', 'CAP_KILL', 'CAP_AUDIT_WRITE'], 'effective': ['CAP_CHOWN', 'CAP_DAC_OVERRIDE', 'CAP_FSETID', 'CAP_FOWNER', 'CAP_MKNOD', 'CAP_NET_RAW', 'CAP_SETGID', 'CAP_SETUID', 'CAP_SETFCAP', 'CAP_SETPCAP', 'CAP_NET_BIND_SERVICE', 'CAP_SYS_CHROOT', 'CAP_KILL', 'CAP_AUDIT_WRITE'], 'permitted': ['CAP_CHOWN', 'CAP_DAC_OVERRIDE', 'CAP_FSETID', 'CAP_FOWNER', 'CAP_MKNOD', 'CAP_NET_RAW', 'CAP_SETGID', 'CAP_SETUID', 'CAP_SETFCAP', 'CAP_SETPCAP', 'CAP_NET_BIND_SERVICE', 'CAP_SYS_CHROOT', 'CAP_KILL', 'CAP_AUDIT_WRITE']}, 'rlimits': [{'type': 'RLIMIT_NOFILE', 'hard': 65535, 'soft': 65535}], 'noNewPrivileges': True}, 'root': {'path': 'rootfs'}, 'mounts': [{'destination': '/proc', 'type': 'proc', 'source': 'proc', 'options': ['nosuid', 'noexec', 'nodev']}, {'destination': '/dev', 'type': 'tmpfs', 'source': 'tmpfs', 'options': ['nosuid', 'strictatime', 'mode=755', 'size=65536k']}, {'destination': '/dev/pts', 'type': 'devpts', 'source': 'devpts', 'options': ['nosuid', 'noexec', 'newinstance', 'ptmxmode=0666', 'mode=0620', 'gid=5']}, {'destination': '/dev/shm', 'type': 'tmpfs', 'source': 'shm', 'options': ['nosuid', 'noexec', 'nodev', 'mode=1777', 'size=65536k']}, {'destination': '/dev/mqueue', 'type': 'mqueue', 'source': 'mqueue', 'options': ['nosuid', 'noexec', 'nodev']}, {'destination': '/sys', 'type': 'sysfs', 'source': 'sysfs', 'options': ['nosuid', 'noexec', 'nodev', 'ro']}, {'destination': '/run', 'type': 'tmpfs', 'source': 'tmpfs', 'options': ['nosuid', 'strictatime', 'mode=755', 'size=65536k']}], 'linux': {'resources': {'devices': [{'allow': False, 'access': 'rwm'}]}, 'cgroupsPath': '/default', 'namespaces': [{'type': 'pid'}, {'type': 'ipc'}, {'type': 'uts'}, {'type': 'mount'}, {'type': 'network'}], 'maskedPaths': ['/proc/acpi', '/proc/asound', '/proc/kcore', '/proc/keys', '/proc/latency_stats', '/proc/timer_list', '/proc/timer_stats', '/proc/sched_debug', '/sys/firmware', '/sys/devices/virtual/powercap', '/proc/scsi'], 'readonlyPaths': ['/proc/bus', '/proc/fs', '/proc/irq', '/proc/sys', '/proc/sysrq-trigger']}}})
+ok: [master] => (item={'key': 'cri-base.json', 'value': {'ociVersion': '1.3.0', 'process': {'user': {'uid': 0, 'gid': 0}, 'cwd': '/', 'capabilities': {'bounding': ['CAP_CHOWN', 'CAP_DAC_OVERRIDE', 'CAP_FSETID', 'CAP_FOWNER', 'CAP_MKNOD', 'CAP_NET_RAW', 'CAP_SETGID', 'CAP_SETUID', 'CAP_SETFCAP', 'CAP_SETPCAP', 'CAP_NET_BIND_SERVICE', 'CAP_SYS_CHROOT', 'CAP_KILL', 'CAP_AUDIT_WRITE'], 'effective': ['CAP_CHOWN', 'CAP_DAC_OVERRIDE', 'CAP_FSETID', 'CAP_FOWNER', 'CAP_MKNOD', 'CAP_NET_RAW', 'CAP_SETGID', 'CAP_SETUID', 'CAP_SETFCAP', 'CAP_SETPCAP', 'CAP_NET_BIND_SERVICE', 'CAP_SYS_CHROOT', 'CAP_KILL', 'CAP_AUDIT_WRITE'], 'permitted': ['CAP_CHOWN', 'CAP_DAC_OVERRIDE', 'CAP_FSETID', 'CAP_FOWNER', 'CAP_MKNOD', 'CAP_NET_RAW', 'CAP_SETGID', 'CAP_SETUID', 'CAP_SETFCAP', 'CAP_SETPCAP', 'CAP_NET_BIND_SERVICE', 'CAP_SYS_CHROOT', 'CAP_KILL', 'CAP_AUDIT_WRITE']}, 'rlimits': [{'type': 'RLIMIT_NOFILE', 'hard': 65535, 'soft': 65535}], 'noNewPrivileges': True}, 'root': {'path': 'rootfs'}, 'mounts': [{'destination': '/proc', 'type': 'proc', 'source': 'proc', 'options': ['nosuid', 'noexec', 'nodev']}, {'destination': '/dev', 'type': 'tmpfs', 'source': 'tmpfs', 'options': ['nosuid', 'strictatime', 'mode=755', 'size=65536k']}, {'destination': '/dev/pts', 'type': 'devpts', 'source': 'devpts', 'options': ['nosuid', 'noexec', 'newinstance', 'ptmxmode=0666', 'mode=0620', 'gid=5']}, {'destination': '/dev/shm', 'type': 'tmpfs', 'source': 'shm', 'options': ['nosuid', 'noexec', 'nodev', 'mode=1777', 'size=65536k']}, {'destination': '/dev/mqueue', 'type': 'mqueue', 'source': 'mqueue', 'options': ['nosuid', 'noexec', 'nodev']}, {'destination': '/sys', 'type': 'sysfs', 'source': 'sysfs', 'options': ['nosuid', 'noexec', 'nodev', 'ro']}, {'destination': '/run', 'type': 'tmpfs', 'source': 'tmpfs', 'options': ['nosuid', 'strictatime', 'mode=755', 'size=65536k']}], 'linux': {'resources': {'devices': [{'allow': False, 'access': 'rwm'}]}, 'cgroupsPath': '/default', 'namespaces': [{'type': 'pid'}, {'type': 'ipc'}, {'type': 'uts'}, {'type': 'mount'}, {'type': 'network'}], 'maskedPaths': ['/proc/acpi', '/proc/asound', '/proc/kcore', '/proc/keys', '/proc/latency_stats', '/proc/timer_list', '/proc/timer_stats', '/proc/sched_debug', '/sys/firmware', '/sys/devices/virtual/powercap', '/proc/scsi'], 'readonlyPaths': ['/proc/bus', '/proc/fs', '/proc/irq', '/proc/sys', '/proc/sysrq-trigger']}}})
+ok: [node2] => (item={'key': 'cri-base.json', 'value': {'ociVersion': '1.3.0', 'process': {'user': {'uid': 0, 'gid': 0}, 'cwd': '/', 'capabilities': {'bounding': ['CAP_CHOWN', 'CAP_DAC_OVERRIDE', 'CAP_FSETID', 'CAP_FOWNER', 'CAP_MKNOD', 'CAP_NET_RAW', 'CAP_SETGID', 'CAP_SETUID', 'CAP_SETFCAP', 'CAP_SETPCAP', 'CAP_NET_BIND_SERVICE', 'CAP_SYS_CHROOT', 'CAP_KILL', 'CAP_AUDIT_WRITE'], 'effective': ['CAP_CHOWN', 'CAP_DAC_OVERRIDE', 'CAP_FSETID', 'CAP_FOWNER', 'CAP_MKNOD', 'CAP_NET_RAW', 'CAP_SETGID', 'CAP_SETUID', 'CAP_SETFCAP', 'CAP_SETPCAP', 'CAP_NET_BIND_SERVICE', 'CAP_SYS_CHROOT', 'CAP_KILL', 'CAP_AUDIT_WRITE'], 'permitted': ['CAP_CHOWN', 'CAP_DAC_OVERRIDE', 'CAP_FSETID', 'CAP_FOWNER', 'CAP_MKNOD', 'CAP_NET_RAW', 'CAP_SETGID', 'CAP_SETUID', 'CAP_SETFCAP', 'CAP_SETPCAP', 'CAP_NET_BIND_SERVICE', 'CAP_SYS_CHROOT', 'CAP_KILL', 'CAP_AUDIT_WRITE']}, 'rlimits': [{'type': 'RLIMIT_NOFILE', 'hard': 65535, 'soft': 65535}], 'noNewPrivileges': True}, 'root': {'path': 'rootfs'}, 'mounts': [{'destination': '/proc', 'type': 'proc', 'source': 'proc', 'options': ['nosuid', 'noexec', 'nodev']}, {'destination': '/dev', 'type': 'tmpfs', 'source': 'tmpfs', 'options': ['nosuid', 'strictatime', 'mode=755', 'size=65536k']}, {'destination': '/dev/pts', 'type': 'devpts', 'source': 'devpts', 'options': ['nosuid', 'noexec', 'newinstance', 'ptmxmode=0666', 'mode=0620', 'gid=5']}, {'destination': '/dev/shm', 'type': 'tmpfs', 'source': 'shm', 'options': ['nosuid', 'noexec', 'nodev', 'mode=1777', 'size=65536k']}, {'destination': '/dev/mqueue', 'type': 'mqueue', 'source': 'mqueue', 'options': ['nosuid', 'noexec', 'nodev']}, {'destination': '/sys', 'type': 'sysfs', 'source': 'sysfs', 'options': ['nosuid', 'noexec', 'nodev', 'ro']}, {'destination': '/run', 'type': 'tmpfs', 'source': 'tmpfs', 'options': ['nosuid', 'strictatime', 'mode=755', 'size=65536k']}], 'linux': {'resources': {'devices': [{'allow': False, 'access': 'rwm'}]}, 'cgroupsPath': '/default', 'namespaces': [{'type': 'pid'}, {'type': 'ipc'}, {'type': 'uts'}, {'type': 'mount'}, {'type': 'network'}], 'maskedPaths': ['/proc/acpi', '/proc/asound', '/proc/kcore', '/proc/keys', '/proc/latency_stats', '/proc/timer_list', '/proc/timer_stats', '/proc/sched_debug', '/sys/firmware', '/sys/devices/virtual/powercap', '/proc/scsi'], 'readonlyPaths': ['/proc/bus', '/proc/fs', '/proc/irq', '/proc/sys', '/proc/sysrq-trigger']}}})
+Saturday 18 April 2026  15:11:03 +0000 (0:00:00.758)       0:18:30.226 ******** 
+
+TASK [container-engine/containerd : Containerd | Copy containerd config file] ****************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node3]
+ok: [node2]
+Saturday 18 April 2026  15:11:04 +0000 (0:00:00.740)       0:18:30.966 ******** 
+
+TASK [container-engine/containerd : Containerd | Create registry directories] ****************************************************************************************************************************************************
+ok: [master] => (item=None)
+ok: [master]
+ok: [node1] => (item=None)
+ok: [node1]
+ok: [node2] => (item=None)
+ok: [node2]
+ok: [node3] => (item=None)
+ok: [node3]
+Saturday 18 April 2026  15:11:04 +0000 (0:00:00.340)       0:18:31.306 ******** 
+
+TASK [container-engine/containerd : Containerd | Write hosts.toml file] **********************************************************************************************************************************************************
+ok: [master] => (item=None)
+ok: [master]
+ok: [node1] => (item=None)
+ok: [node1]
+ok: [node3] => (item=None)
+ok: [node3]
+ok: [node2] => (item=None)
+ok: [node2]
+Saturday 18 April 2026  15:11:05 +0000 (0:00:00.758)       0:18:32.065 ******** 
+Saturday 18 April 2026  15:11:05 +0000 (0:00:00.010)       0:18:32.075 ******** 
+Saturday 18 April 2026  15:11:05 +0000 (0:00:00.010)       0:18:32.086 ******** 
+Saturday 18 April 2026  15:11:05 +0000 (0:00:00.057)       0:18:32.144 ******** 
+Saturday 18 April 2026  15:11:05 +0000 (0:00:00.014)       0:18:32.158 ******** 
+
+TASK [container-engine/containerd : Containerd | Ensure containerd is started and enabled] ***************************************************************************************************************************************
+ok: [node1]
+ok: [node2]
+ok: [master]
+ok: [node3]
+Saturday 18 April 2026  15:11:06 +0000 (0:00:00.887)       0:18:33.046 ******** 
+
+TASK [download : Prep_download | Set a few facts] ********************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:11:06 +0000 (0:00:00.146)       0:18:33.192 ******** 
+Saturday 18 April 2026  15:11:06 +0000 (0:00:00.039)       0:18:33.231 ******** 
+Saturday 18 April 2026  15:11:06 +0000 (0:00:00.037)       0:18:33.269 ******** 
+Saturday 18 April 2026  15:11:06 +0000 (0:00:00.122)       0:18:33.391 ******** 
+Saturday 18 April 2026  15:11:06 +0000 (0:00:00.082)       0:18:33.474 ******** 
+
+TASK [download : Prep_download | Register docker images info] ********************************************************************************************************************************************************************
+ok: [node2]
+ok: [node1]
+ok: [node3]
+ok: [master]
+Saturday 18 April 2026  15:11:07 +0000 (0:00:00.636)       0:18:34.110 ******** 
+
+TASK [download : Prep_download | Create staging directory on remote node] ********************************************************************************************************************************************************
+changed: [node1]
+changed: [master]
+changed: [node2]
+changed: [node3]
+Saturday 18 April 2026  15:11:07 +0000 (0:00:00.533)       0:18:34.644 ******** 
+Saturday 18 April 2026  15:11:08 +0000 (0:00:00.241)       0:18:34.885 ******** 
+
+TASK [download : Download | Get kubeadm binary and list of required images] ******************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/prep_kubeadm_images.yml for master
+Saturday 18 April 2026  15:11:08 +0000 (0:00:00.127)       0:18:35.013 ******** 
+
+TASK [download : Prep_kubeadm_images | Download kubeadm binary] ******************************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_file.yml for master
+Saturday 18 April 2026  15:11:08 +0000 (0:00:00.614)       0:18:35.627 ******** 
+
+TASK [download : Prep_download | Set a few facts] ********************************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:11:09 +0000 (0:00:00.435)       0:18:36.062 ******** 
+Saturday 18 April 2026  15:11:09 +0000 (0:00:00.026)       0:18:36.089 ******** 
+
+TASK [download : Download_file | Set pathname of cached file] ********************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:11:10 +0000 (0:00:00.821)       0:18:36.911 ******** 
+
+TASK [download : Download_file | Create dest directory on node] ******************************************************************************************************************************************************************
+changed: [master]
+Saturday 18 April 2026  15:11:11 +0000 (0:00:01.405)       0:18:38.316 ******** 
+Saturday 18 April 2026  15:11:11 +0000 (0:00:00.029)       0:18:38.346 ******** 
+Saturday 18 April 2026  15:11:11 +0000 (0:00:00.029)       0:18:38.375 ******** 
+
+TASK [download : Download_file | Download item] **********************************************************************************************************************************************************************************
+changed: [master]
+Saturday 18 April 2026  15:11:24 +0000 (0:00:12.504)       0:18:50.879 ******** 
+Saturday 18 April 2026  15:11:24 +0000 (0:00:00.022)       0:18:50.901 ******** 
+Saturday 18 April 2026  15:11:24 +0000 (0:00:00.019)       0:18:50.921 ******** 
+Saturday 18 April 2026  15:11:24 +0000 (0:00:00.023)       0:18:50.945 ******** 
+
+TASK [download : Download_file | Extract file archives] **************************************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/extract_file.yml for master
+Saturday 18 April 2026  15:11:24 +0000 (0:00:00.037)       0:18:50.983 ******** 
+Saturday 18 April 2026  15:11:24 +0000 (0:00:00.560)       0:18:51.543 ******** 
+
+TASK [download : Prep_kubeadm_images | Copy kubeadm binary from download dir to system path] *************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:11:26 +0000 (0:00:02.122)       0:18:53.666 ******** 
+
+TASK [download : Prep_kubeadm_images | Create kubeadm config] ********************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:11:27 +0000 (0:00:00.825)       0:18:54.491 ******** 
+
+TASK [download : Prep_kubeadm_images | Generate list of required images] *********************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:11:28 +0000 (0:00:00.411)       0:18:54.903 ******** 
+
+TASK [download : Prep_kubeadm_images | Parse list of images] *********************************************************************************************************************************************************************
+ok: [master] => (item=registry.k8s.io/kube-apiserver:v1.35.3)
+ok: [master] => (item=registry.k8s.io/kube-controller-manager:v1.35.3)
+ok: [master] => (item=registry.k8s.io/kube-scheduler:v1.35.3)
+ok: [master] => (item=registry.k8s.io/kube-proxy:v1.35.3)
+Saturday 18 April 2026  15:11:28 +0000 (0:00:00.089)       0:18:54.993 ******** 
+
+TASK [download : Prep_kubeadm_images | Convert list of images to dict for later use] *********************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:11:28 +0000 (0:00:00.101)       0:18:55.094 ******** 
+
+TASK [download : Download | Download files / images] *****************************************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_file.yml for master => (item={'key': 'etcd', 'value': {'container': False, 'file': True, 'enabled': True, 'dest': '/tmp/releases/etcd-3.6.9-linux-amd64.tar.gz', 'repo': 'quay.io/coreos/etcd', 'tag': 'v3.6.9', 'checksum': 'sha256:633136f13fcadac52e5c0ddcb97912643af6fcb9cb362e75774d0f96f7666396', 'url': 'https://github.com/etcd-io/etcd/releases/download/v3.6.9/etcd-v3.6.9-linux-amd64.tar.gz', 'unarchive': True, 'owner': 'root', 'mode': '0755', 'groups': ['etcd']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_file.yml for master, node2, node1, node3 => (item={'key': 'cni', 'value': {'enabled': True, 'file': True, 'dest': '/tmp/releases/cni-plugins-linux-amd64-1.8.0.tgz', 'checksum': 'sha256:ab3bda535f9d90766cccc90d3dddb5482003dd744d7f22bcf98186bf8eea8be6', 'url': 'https://github.com/containernetworking/plugins/releases/download/v1.8.0/cni-plugins-linux-amd64-v1.8.0.tgz', 'unarchive': False, 'owner': 'root', 'mode': '0755', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_file.yml for master, node2, node1, node3 => (item={'key': 'kubeadm', 'value': {'enabled': True, 'file': True, 'dest': '/tmp/releases/kubeadm-1.35.3-amd64', 'checksum': 'sha256:a3fb4b3a214a807e2ef4c3fda3196c7f97dcf8152558de5a3c473c869bda0b07', 'url': 'https://dl.k8s.io/release/v1.35.3/bin/linux/amd64/kubeadm', 'unarchive': False, 'owner': 'root', 'mode': '0755', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_file.yml for master, node2, node1, node3 => (item={'key': 'kubelet', 'value': {'enabled': True, 'file': True, 'dest': '/tmp/releases/kubelet-1.35.3-amd64', 'checksum': 'sha256:28d570423eaad5f1f5658a646bd8c015c786c95d62ffaf14bf35fa0c4326fa05', 'url': 'https://dl.k8s.io/release/v1.35.3/bin/linux/amd64/kubelet', 'unarchive': False, 'owner': 'root', 'mode': '0755', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_file.yml for master => (item={'key': 'kubectl', 'value': {'enabled': True, 'file': True, 'dest': '/tmp/releases/kubectl-1.35.3-amd64', 'checksum': 'sha256:fd31c7d7129260e608f6faf92d5984c3267ad0b5ead3bced2fe125686e286ad6', 'url': 'https://dl.k8s.io/release/v1.35.3/bin/linux/amd64/kubectl', 'unarchive': False, 'owner': 'root', 'mode': '0755', 'groups': ['kube_control_plane']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_file.yml for master, node2, node1, node3 => (item={'key': 'crictl', 'value': {'file': True, 'enabled': True, 'dest': '/tmp/releases/crictl-1.35.0-linux-amd64.tar.gz', 'checksum': 'sha256:2e141e5b22cb189c40365a11807d69b76b9b3caced89fac2f4ec879408ce2177', 'url': 'https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.35.0/crictl-v1.35.0-linux-amd64.tar.gz', 'unarchive': True, 'owner': 'root', 'mode': '0755', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_file.yml for master, node2, node1, node3 => (item={'key': 'runc', 'value': {'file': True, 'enabled': True, 'dest': '/tmp/releases/runc-1.3.5.amd64', 'checksum': 'sha256:66fa8390be8fb3b23dfbb60c767368bb5b51f1acfa88692bbff1a82953d4d9e9', 'url': 'https://github.com/opencontainers/runc/releases/download/v1.3.5/runc.amd64', 'unarchive': False, 'owner': 'root', 'mode': '0755', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_file.yml for master, node2, node1, node3 => (item={'key': 'containerd', 'value': {'enabled': True, 'file': True, 'dest': '/tmp/releases/containerd-2.2.2-linux-amd64.tar.gz', 'checksum': 'sha256:2c08c99cbde73b3388c6d5da68e0bcaebc70c9174f2b14d785695e4401b3ede0', 'url': 'https://github.com/containerd/containerd/releases/download/v2.2.2/containerd-2.2.2-linux-amd64.tar.gz', 'unarchive': False, 'owner': 'root', 'mode': '0755', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_file.yml for master, node2, node1, node3 => (item={'key': 'nerdctl', 'value': {'file': True, 'enabled': True, 'dest': '/tmp/releases/nerdctl-2.2.2-linux-amd64.tar.gz', 'checksum': 'sha256:6f637760fb2875e3454e97c3de7438fd17281b5996908cbd8ee1c872b0653cc8', 'url': 'https://github.com/containerd/nerdctl/releases/download/v2.2.2/nerdctl-2.2.2-linux-amd64.tar.gz', 'unarchive': True, 'owner': 'root', 'mode': '0755', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_file.yml for master, node2, node1, node3 => (item={'key': 'calicoctl', 'value': {'enabled': True, 'file': True, 'dest': '/tmp/releases/calicoctl-3.30.7-amd64', 'checksum': 'sha256:087e1547878913587ebaa756686f38184a730e9af9b71f3d91b92f6c99b60c11', 'url': 'https://github.com/projectcalico/calico/releases/download/v3.30.7/calicoctl-linux-amd64', 'unarchive': False, 'owner': 'root', 'mode': '0755', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_container.yml for master, node2, node1, node3 => (item={'key': 'calico_node', 'value': {'enabled': True, 'container': True, 'repo': 'quay.io/calico/node', 'tag': 'v3.30.7', 'checksum': '', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_container.yml for master, node2, node1, node3 => (item={'key': 'calico_cni', 'value': {'enabled': True, 'container': True, 'repo': 'quay.io/calico/cni', 'tag': 'v3.30.7', 'checksum': '', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_container.yml for master, node2, node1, node3 => (item={'key': 'calico_policy', 'value': {'enabled': True, 'container': True, 'repo': 'quay.io/calico/kube-controllers', 'tag': 'v3.30.7', 'checksum': '', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_file.yml for master => (item={'key': 'calico_crds', 'value': {'file': True, 'enabled': True, 'dest': '/tmp/releases/calico-3.30.7-kdd-crds/crds.yaml', 'checksum': 'sha256:b0eb83f6d70afac27e8830f22642cd12b0692e4d1a1b5060caa9231a951e736a', 'url': 'https://github.com/projectcalico/calico/raw/v3.30.7/manifests/crds.yaml', 'owner': 'root', 'mode': '0755', 'groups': ['kube_control_plane']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_container.yml for master, node2, node1, node3 => (item={'key': 'pod_infra', 'value': {'enabled': True, 'container': True, 'repo': 'registry.k8s.io/pause', 'tag': '3.10.1', 'checksum': '', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_container.yml for master, node2, node1, node3 => (item={'key': 'coredns', 'value': {'enabled': True, 'container': True, 'repo': 'registry.k8s.io/coredns/coredns', 'tag': 'v1.12.4', 'checksum': '', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_container.yml for master, node2, node1, node3 => (item={'key': 'nodelocaldns', 'value': {'enabled': True, 'container': True, 'repo': 'registry.k8s.io/dns/k8s-dns-node-cache', 'tag': '1.25.0', 'checksum': '', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_container.yml for master => (item={'key': 'dnsautoscaler', 'value': {'enabled': True, 'container': True, 'repo': 'registry.k8s.io/cpa/cluster-proportional-autoscaler', 'tag': 'v1.8.8', 'checksum': '', 'groups': ['kube_control_plane']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_container.yml for master, node2, node1, node3 => (item={'key': 'kubeadm_kube-apiserver', 'value': {'enabled': True, 'container': True, 'repo': 'registry.k8s.io/kube-apiserver', 'tag': 'v1.35.3', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_container.yml for master, node2, node1, node3 => (item={'key': 'kubeadm_kube-controller-manager', 'value': {'enabled': True, 'container': True, 'repo': 'registry.k8s.io/kube-controller-manager', 'tag': 'v1.35.3', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_container.yml for master, node2, node1, node3 => (item={'key': 'kubeadm_kube-scheduler', 'value': {'enabled': True, 'container': True, 'repo': 'registry.k8s.io/kube-scheduler', 'tag': 'v1.35.3', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_container.yml for master, node2, node1, node3 => (item={'key': 'kubeadm_kube-proxy', 'value': {'enabled': True, 'container': True, 'repo': 'registry.k8s.io/kube-proxy', 'tag': 'v1.35.3', 'groups': ['k8s_cluster']}})
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/download_container.yml for node2, node1, node3 => (item={'key': 'nginx', 'value': {'enabled': True, 'container': True, 'repo': 'docker.io/library/nginx', 'tag': '1.28.2-alpine', 'checksum': '', 'groups': ['kube_node']}})
+Saturday 18 April 2026  15:11:29 +0000 (0:00:01.437)       0:18:56.532 ******** 
+
+TASK [download : Prep_download | Set a few facts] ********************************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:11:29 +0000 (0:00:00.037)       0:18:56.569 ******** 
+Saturday 18 April 2026  15:11:29 +0000 (0:00:00.028)       0:18:56.597 ******** 
+
+TASK [download : Download_file | Set pathname of cached file] ********************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:11:29 +0000 (0:00:00.044)       0:18:56.641 ******** 
+
+TASK [download : Download_file | Create dest directory on node] ******************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:11:30 +0000 (0:00:00.409)       0:18:57.051 ******** 
+Saturday 18 April 2026  15:11:30 +0000 (0:00:00.029)       0:18:57.081 ******** 
+Saturday 18 April 2026  15:11:30 +0000 (0:00:00.026)       0:18:57.108 ******** 
+
+TASK [download : Download_file | Download item] **********************************************************************************************************************************************************************************
+changed: [master]
+Saturday 18 April 2026  15:11:32 +0000 (0:00:01.806)       0:18:58.914 ******** 
+Saturday 18 April 2026  15:11:32 +0000 (0:00:00.024)       0:18:58.939 ******** 
+Saturday 18 April 2026  15:11:32 +0000 (0:00:00.025)       0:18:58.965 ******** 
+Saturday 18 April 2026  15:11:32 +0000 (0:00:00.031)       0:18:58.997 ******** 
+
+TASK [download : Download_file | Extract file archives] **************************************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/extract_file.yml for master
+Saturday 18 April 2026  15:11:32 +0000 (0:00:00.096)       0:18:59.093 ******** 
+
+TASK [download : Extract_file | Unpacking archive] *******************************************************************************************************************************************************************************
+changed: [master]
+Saturday 18 April 2026  15:11:35 +0000 (0:00:03.093)       0:19:02.187 ******** 
+
+TASK [download : Prep_download | Set a few facts] ********************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:11:35 +0000 (0:00:00.087)       0:19:02.274 ******** 
+Saturday 18 April 2026  15:11:35 +0000 (0:00:00.118)       0:19:02.392 ******** 
+
+TASK [download : Download_file | Set pathname of cached file] ********************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:11:35 +0000 (0:00:00.089)       0:19:02.482 ******** 
+
+TASK [download : Download_file | Create dest directory on node] ******************************************************************************************************************************************************************
+changed: [node1]
+changed: [node2]
+ok: [master]
+changed: [node3]
+Saturday 18 April 2026  15:11:36 +0000 (0:00:00.468)       0:19:02.950 ******** 
+Saturday 18 April 2026  15:11:36 +0000 (0:00:00.033)       0:19:02.984 ******** 
+Saturday 18 April 2026  15:11:36 +0000 (0:00:00.087)       0:19:03.071 ******** 
+
+TASK [download : Download_file | Download item] **********************************************************************************************************************************************************************************
+changed: [node3]
+changed: [master]
+changed: [node2]
+changed: [node1]
+Saturday 18 April 2026  15:11:38 +0000 (0:00:02.564)       0:19:05.636 ******** 
+Saturday 18 April 2026  15:11:38 +0000 (0:00:00.068)       0:19:05.704 ******** 
+Saturday 18 April 2026  15:11:39 +0000 (0:00:00.154)       0:19:05.859 ******** 
+Saturday 18 April 2026  15:11:39 +0000 (0:00:00.085)       0:19:05.944 ******** 
+
+TASK [download : Download_file | Extract file archives] **************************************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/download/tasks/extract_file.yml for master, node1, node2, node3
+Saturday 18 April 2026  15:11:39 +0000 (0:00:00.133)       0:19:06.078 ******** 
+Saturday 18 April 2026  15:11:39 +0000 (0:00:00.061)       0:19:06.140 ******** 
+
+TASK [download : Prep_download | Set a few facts] ********************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:11:39 +0000 (0:00:00.091)       0:19:06.231 ******** 
+Saturday 18 April 2026  15:11:39 +0000 (0:00:00.070)       0:19:06.301 ******** 
+
+TASK [download : Download_file | Set pathname of cached file] ********************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:11:39 +0000 (0:00:00.131)       0:19:06.432 ******** 
+
+TASK [download : Download_file | Create dest directory on node] ******************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:11:40 +0000 (0:00:00.385)       0:19:06.818 ******** 
+Saturday 18 April 2026  15:11:40 +0000 (0:00:00.029)       0:19:06.848 ******** 
+Saturday 18 April 2026  15:11:40 +0000 (0:00:00.075)       0:19:06.923 ******** 
+
+Saturday 18 April 2026  15:15:44 +0000 (0:00:00.496)       0:23:10.965 ******** 
+
+TASK [kubernetes/control-plane : Check already run] ******************************************************************************************************************************************************************************
+ok: [master] => {
+    "msg": true
+}
+Saturday 18 April 2026  15:15:44 +0000 (0:00:00.039)       0:23:11.005 ******** 
+Saturday 18 April 2026  15:15:44 +0000 (0:00:00.024)       0:23:11.030 ******** 
+Saturday 18 April 2026  15:15:44 +0000 (0:00:00.035)       0:23:11.065 ******** 
+Saturday 18 April 2026  15:15:44 +0000 (0:00:00.027)       0:23:11.093 ******** 
+Saturday 18 April 2026  15:15:44 +0000 (0:00:00.075)       0:23:11.168 ******** 
+Saturday 18 April 2026  15:15:44 +0000 (0:00:00.081)       0:23:11.250 ******** 
+
+TASK [kubernetes/control-plane : Wait for new control plane nodes to be Ready] ***************************************************************************************************************************************************
+changed: [master]
+Saturday 18 April 2026  15:15:44 +0000 (0:00:00.461)       0:23:11.711 ******** 
+Saturday 18 April 2026  15:15:44 +0000 (0:00:00.047)       0:23:11.759 ******** 
+Saturday 18 April 2026  15:15:45 +0000 (0:00:00.129)       0:23:11.889 ******** 
+Saturday 18 April 2026  15:15:45 +0000 (0:00:00.023)       0:23:11.912 ******** 
+Saturday 18 April 2026  15:15:45 +0000 (0:00:00.047)       0:23:11.959 ******** 
+
+TASK [kubernetes/control-plane : Install script to renew K8S control plane certificates] *****************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:15:45 +0000 (0:00:00.779)       0:23:12.739 ******** 
+Saturday 18 April 2026  15:15:45 +0000 (0:00:00.032)       0:23:12.771 ******** 
+Saturday 18 April 2026  15:15:45 +0000 (0:00:00.027)       0:23:12.798 ******** 
+
+TASK [kubernetes/client : Set external kube-apiserver endpoint] ******************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:15:46 +0000 (0:00:00.041)       0:23:12.839 ******** 
+
+TASK [kubernetes/client : Create kube config dir for current/ansible become user] ************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:15:46 +0000 (0:00:00.335)       0:23:13.175 ******** 
+
+TASK [kubernetes/client : Write admin kubeconfig to current/ansible become user home] ********************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:15:46 +0000 (0:00:00.371)       0:23:13.546 ******** 
+Saturday 18 April 2026  15:15:46 +0000 (0:00:00.027)       0:23:13.573 ******** 
+
+TASK [kubernetes/client : Wait for k8s apiserver] ********************************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:15:47 +0000 (0:00:00.339)       0:23:13.913 ******** 
+Saturday 18 April 2026  15:15:47 +0000 (0:00:00.038)       0:23:13.952 ******** 
+Saturday 18 April 2026  15:15:47 +0000 (0:00:00.086)       0:23:14.038 ******** 
+Saturday 18 April 2026  15:15:47 +0000 (0:00:00.086)       0:23:14.125 ******** 
+Saturday 18 April 2026  15:15:47 +0000 (0:00:00.026)       0:23:14.151 ******** 
+
+TASK [kubernetes-apps/cluster_roles : Kubernetes Apps | Wait for kube-apiserver] *************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:15:48 +0000 (0:00:00.774)       0:23:14.926 ******** 
+
+TASK [kubernetes-apps/cluster_roles : Kubernetes Apps | Add ClusterRoleBinding to admit nodes] ***********************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:15:48 +0000 (0:00:00.649)       0:23:15.576 ******** 
+Saturday 18 April 2026  15:15:48 +0000 (0:00:00.040)       0:23:15.616 ******** 
+
+TASK [kubernetes-apps/cluster_roles : Kubernetes Apps | Remove old webhook ClusterRole] ******************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:15:49 +0000 (0:00:00.570)       0:23:16.187 ******** 
+
+TASK [kubernetes-apps/cluster_roles : Kubernetes Apps | Remove old webhook ClusterRoleBinding] ***********************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:15:49 +0000 (0:00:00.541)       0:23:16.728 ******** 
+
+TASK [kubernetes-apps/cluster_roles : PriorityClass | Copy k8s-cluster-critical-pc.yml file] *************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:15:50 +0000 (0:00:00.708)       0:23:17.437 ******** 
+
+TASK [kubernetes-apps/cluster_roles : PriorityClass | Create k8s-cluster-critical] ***********************************************************************************************************************************************
+ok: [master]
+
+PLAY [Invoke kubeadm and install a CNI] ******************************************************************************************************************************************************************************************
+Saturday 18 April 2026  15:15:51 +0000 (0:00:00.503)       0:23:17.941 ******** 
+Saturday 18 April 2026  15:15:51 +0000 (0:00:00.139)       0:23:18.081 ******** 
+
+TASK [kubernetes/kubeadm_common : Kubeadm | List existing kubeadm patches] *******************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:15:51 +0000 (0:00:00.358)       0:23:18.439 ******** 
+Saturday 18 April 2026  15:15:51 +0000 (0:00:00.132)       0:23:18.571 ******** 
+Saturday 18 April 2026  15:15:51 +0000 (0:00:00.108)       0:23:18.679 ******** 
+
+TASK [kubernetes/kubeadm : Set kubeadm_discovery_address] ************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node3]
+ok: [node2]
+Saturday 18 April 2026  15:15:52 +0000 (0:00:00.202)       0:23:18.881 ******** 
+
+TASK [kubernetes/kubeadm : Check if kubelet.conf exists] *************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:15:52 +0000 (0:00:00.421)       0:23:19.303 ******** 
+
+TASK [kubernetes/kubeadm : Check if kubeadm CA cert is accessible] ***************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:15:52 +0000 (0:00:00.292)       0:23:19.596 ******** 
+
+TASK [kubernetes/kubeadm : Fetch CA certificate from control plane node] *********************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:15:53 +0000 (0:00:00.350)       0:23:19.946 ******** 
+
+TASK [kubernetes/kubeadm : Create kubeadm token for joining nodes with 24h expiration (default)] *********************************************************************************************************************************
+ok: [node1 -> master(111.88.247.163)]
+ok: [node2 -> master(111.88.247.163)]
+ok: [node3 -> master(111.88.247.163)]
+Saturday 18 April 2026  15:15:53 +0000 (0:00:00.635)       0:23:20.582 ******** 
+
+TASK [kubernetes/kubeadm : Set kubeadm_token to generated token] *****************************************************************************************************************************************************************
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:15:53 +0000 (0:00:00.193)       0:23:20.775 ******** 
+Saturday 18 April 2026  15:15:54 +0000 (0:00:00.036)       0:23:20.812 ******** 
+
+TASK [kubernetes/kubeadm : Check if discovery kubeconfig exists] *****************************************************************************************************************************************************************
+ok: [node1]
+ok: [master]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:15:54 +0000 (0:00:00.433)       0:23:21.245 ******** 
+Saturday 18 April 2026  15:15:54 +0000 (0:00:00.097)       0:23:21.343 ******** 
+
+TASK [kubernetes/kubeadm : Create kubeadm client config] *************************************************************************************************************************************************************************
+changed: [node3]
+changed: [node1]
+changed: [node2]
+Saturday 18 April 2026  15:15:56 +0000 (0:00:02.135)       0:23:23.478 ******** 
+Saturday 18 April 2026  15:15:56 +0000 (0:00:00.077)       0:23:23.556 ******** 
+
+TASK [kubernetes/kubeadm : Update server field in kubelet kubeconfig] ************************************************************************************************************************************************************
+ok: [node3]
+ok: [node1]
+ok: [node2]
+Saturday 18 April 2026  15:15:57 +0000 (0:00:00.504)       0:23:24.061 ******** 
+Saturday 18 April 2026  15:15:57 +0000 (0:00:00.083)       0:23:24.145 ******** 
+
+TASK [kubernetes/kubeadm : Get current resourceVersion of kube-proxy configmap] **************************************************************************************************************************************************
+changed: [master]
+Saturday 18 April 2026  15:15:57 +0000 (0:00:00.389)       0:23:24.534 ******** 
+
+TASK [kubernetes/kubeadm : Update server field in kube-proxy kubeconfig] *********************************************************************************************************************************************************
+changed: [master]
+Saturday 18 April 2026  15:15:58 +0000 (0:00:00.638)       0:23:25.173 ******** 
+Saturday 18 April 2026  15:15:58 +0000 (0:00:00.051)       0:23:25.224 ******** 
+
+TASK [kubernetes/kubeadm : Get new resourceVersion of kube-proxy configmap] ******************************************************************************************************************************************************
+changed: [master]
+Saturday 18 April 2026  15:15:58 +0000 (0:00:00.379)       0:23:25.604 ******** 
+
+TASK [kubernetes/kubeadm : Set ca.crt file permission] ***************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node3]
+ok: [node2]
+Saturday 18 April 2026  15:15:59 +0000 (0:00:00.342)       0:23:25.946 ******** 
+Saturday 18 April 2026  15:15:59 +0000 (0:00:00.348)       0:23:26.295 ******** 
+Saturday 18 April 2026  15:15:59 +0000 (0:00:00.211)       0:23:26.506 ******** 
+
+TASK [kubernetes/node-label : Kubernetes Apps | Wait for kube-apiserver] *********************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:00 +0000 (0:00:00.545)       0:23:27.051 ******** 
+
+TASK [kubernetes/node-label : Set role node label to empty list] *****************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:00 +0000 (0:00:00.116)       0:23:27.168 ******** 
+Saturday 18 April 2026  15:16:00 +0000 (0:00:00.188)       0:23:27.357 ******** 
+
+TASK [kubernetes/node-label : Set inventory node label to empty list] ************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:00 +0000 (0:00:00.106)       0:23:27.463 ******** 
+Saturday 18 April 2026  15:16:00 +0000 (0:00:00.142)       0:23:27.605 ******** 
+
+TASK [kubernetes/node-label : debug] *********************************************************************************************************************************************************************************************
+ok: [master] => {
+    "role_node_labels": []
+}
+ok: [node1] => {
+    "role_node_labels": []
+}
+ok: [node2] => {
+    "role_node_labels": []
+}
+ok: [node3] => {
+    "role_node_labels": []
+}
+Saturday 18 April 2026  15:16:00 +0000 (0:00:00.101)       0:23:27.707 ******** 
+
+TASK [kubernetes/node-label : debug] *********************************************************************************************************************************************************************************************
+ok: [master] => {
+    "inventory_node_labels": []
+}
+ok: [node1] => {
+    "inventory_node_labels": []
+}
+ok: [node2] => {
+    "inventory_node_labels": []
+}
+ok: [node3] => {
+    "inventory_node_labels": []
+}
+Saturday 18 April 2026  15:16:01 +0000 (0:00:00.094)       0:23:27.802 ******** 
+Saturday 18 April 2026  15:16:01 +0000 (0:00:00.222)       0:23:28.024 ******** 
+
+TASK [kubernetes/node-taint : Set role and inventory node taint to empty list] ***************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:01 +0000 (0:00:00.184)       0:23:28.209 ******** 
+Saturday 18 April 2026  15:16:01 +0000 (0:00:00.188)       0:23:28.398 ******** 
+
+TASK [kubernetes/node-taint : Populate inventory node taint] *********************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:01 +0000 (0:00:00.207)       0:23:28.606 ******** 
+
+TASK [kubernetes/node-taint : debug] *********************************************************************************************************************************************************************************************
+ok: [master] => {
+    "role_node_taints": []
+}
+ok: [node1] => {
+    "role_node_taints": []
+}
+ok: [node2] => {
+    "role_node_taints": []
+}
+ok: [node3] => {
+    "role_node_taints": []
+}
+Saturday 18 April 2026  15:16:01 +0000 (0:00:00.099)       0:23:28.705 ******** 
+
+TASK [kubernetes/node-taint : debug] *********************************************************************************************************************************************************************************************
+ok: [master] => {
+    "inventory_node_taints": []
+}
+ok: [node1] => {
+    "inventory_node_taints": []
+}
+ok: [node2] => {
+    "inventory_node_taints": []
+}
+ok: [node3] => {
+    "inventory_node_taints": []
+}
+Saturday 18 April 2026  15:16:02 +0000 (0:00:00.135)       0:23:28.841 ******** 
+Saturday 18 April 2026  15:16:02 +0000 (0:00:00.208)       0:23:29.050 ******** 
+Saturday 18 April 2026  15:16:02 +0000 (0:00:00.078)       0:23:29.128 ******** 
+Saturday 18 April 2026  15:16:02 +0000 (0:00:00.121)       0:23:29.250 ******** 
+Saturday 18 April 2026  15:16:02 +0000 (0:00:00.190)       0:23:29.440 ******** 
+Saturday 18 April 2026  15:16:02 +0000 (0:00:00.286)       0:23:29.727 ******** 
+Saturday 18 April 2026  15:16:03 +0000 (0:00:00.072)       0:23:29.800 ******** 
+Saturday 18 April 2026  15:16:03 +0000 (0:00:00.234)       0:23:30.035 ******** 
+
+TASK [Container Network Interface plugin] ****************************************************************************************************************************************************************************************
+included: network_plugin/cni for master, node1, node2, node3
+Saturday 18 April 2026  15:16:03 +0000 (0:00:00.168)       0:23:30.204 ******** 
+
+TASK [network_plugin/cni : CNI | make sure /opt/cni/bin exists] ******************************************************************************************************************************************************************
+changed: [master]
+changed: [node2]
+changed: [node1]
+changed: [node3]
+Saturday 18 April 2026  15:16:04 +0000 (0:00:00.603)       0:23:30.807 ******** 
+
+TASK [network_plugin/cni : CNI | Copy cni plugins] *******************************************************************************************************************************************************************************
+changed: [node1]
+changed: [node2]
+changed: [node3]
+changed: [master]
+Saturday 18 April 2026  15:16:09 +0000 (0:00:05.236)       0:23:36.044 ******** 
+
+TASK [Network plugin] ************************************************************************************************************************************************************************************************************
+included: network_plugin/calico for master, node1, node2, node3
+Saturday 18 April 2026  15:16:09 +0000 (0:00:00.349)       0:23:36.393 ******** 
+
+TASK [network_plugin/calico : Slurp CNI config] **********************************************************************************************************************************************************************************
+ok: [node1]
+ok: [node2]
+ok: [master]
+ok: [node3]
+Saturday 18 April 2026  15:16:10 +0000 (0:00:00.407)       0:23:36.800 ******** 
+
+TASK [network_plugin/calico : Set fact calico_cni_config from slurped CNI config] ************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:10 +0000 (0:00:00.143)       0:23:36.944 ******** 
+Saturday 18 April 2026  15:16:10 +0000 (0:00:00.080)       0:23:37.024 ******** 
+
+TASK [network_plugin/calico : Calico | Gather os specific variables] *************************************************************************************************************************************************************
+ok: [master] => (item=/home/vm/netology/diplom/infra/03-k8s/kubespray/roles/network_plugin/calico/vars/debian.yml)
+ok: [node1] => (item=/home/vm/netology/diplom/infra/03-k8s/kubespray/roles/network_plugin/calico/vars/debian.yml)
+ok: [node2] => (item=/home/vm/netology/diplom/infra/03-k8s/kubespray/roles/network_plugin/calico/vars/debian.yml)
+ok: [node3] => (item=/home/vm/netology/diplom/infra/03-k8s/kubespray/roles/network_plugin/calico/vars/debian.yml)
+Saturday 18 April 2026  15:16:10 +0000 (0:00:00.209)       0:23:37.233 ******** 
+Saturday 18 April 2026  15:16:10 +0000 (0:00:00.140)       0:23:37.374 ******** 
+
+TASK [network_plugin/calico : Calico install] ************************************************************************************************************************************************************************************
+included: /home/vm/netology/diplom/infra/03-k8s/kubespray/roles/network_plugin/calico/tasks/install.yml for master, node1, node2, node3
+Saturday 18 April 2026  15:16:10 +0000 (0:00:00.226)       0:23:37.600 ******** 
+Saturday 18 April 2026  15:16:10 +0000 (0:00:00.185)       0:23:37.785 ******** 
+
+TASK [network_plugin/calico : Calico | Copy calicoctl binary from download dir] **************************************************************************************************************************************************
+ok: [node1]
+ok: [master]
+ok: [node3]
+ok: [node2]
+Saturday 18 April 2026  15:16:14 +0000 (0:00:03.489)       0:23:41.275 ******** 
+Saturday 18 April 2026  15:16:14 +0000 (0:00:00.097)       0:23:41.373 ******** 
+Saturday 18 April 2026  15:16:14 +0000 (0:00:00.265)       0:23:41.638 ******** 
+Saturday 18 April 2026  15:16:14 +0000 (0:00:00.137)       0:23:41.776 ******** 
+Saturday 18 April 2026  15:16:15 +0000 (0:00:00.105)       0:23:41.882 ******** 
+
+TASK [network_plugin/calico : Calico | Install calicoctl wrapper script] *********************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:15 +0000 (0:00:00.741)       0:23:42.624 ******** 
+Saturday 18 April 2026  15:16:15 +0000 (0:00:00.062)       0:23:42.686 ******** 
+
+TASK [network_plugin/calico : Calico | Check if calico network pool has already been configured] *********************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:16 +0000 (0:00:00.289)       0:23:42.975 ******** 
+Saturday 18 April 2026  15:16:16 +0000 (0:00:00.172)       0:23:43.147 ******** 
+Saturday 18 April 2026  15:16:16 +0000 (0:00:00.071)       0:23:43.219 ******** 
+Saturday 18 April 2026  15:16:16 +0000 (0:00:00.101)       0:23:43.320 ******** 
+
+TASK [network_plugin/calico : Calico | Create calico manifests for kdd] **********************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:16 +0000 (0:00:00.412)       0:23:43.733 ******** 
+
+TASK [network_plugin/calico : Calico | Create Calico Kubernetes datastore resources] *********************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:18 +0000 (0:00:01.137)       0:23:44.870 ******** 
+
+TASK [network_plugin/calico : Calico | Get existing FelixConfiguration] **********************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:18 +0000 (0:00:00.415)       0:23:45.286 ******** 
+
+TASK [network_plugin/calico : Calico | Set kubespray FelixConfiguration] *********************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:18 +0000 (0:00:00.084)       0:23:45.371 ******** 
+
+TASK [network_plugin/calico : Calico | Process FelixConfiguration] ***************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:18 +0000 (0:00:00.211)       0:23:45.583 ******** 
+
+TASK [network_plugin/calico : Calico | Configure calico FelixConfiguration] ******************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:19 +0000 (0:00:00.321)       0:23:45.904 ******** 
+
+TASK [network_plugin/calico : Calico | Get existing calico network pool] *********************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:19 +0000 (0:00:00.324)       0:23:46.228 ******** 
+
+TASK [network_plugin/calico : Calico | Set kubespray calico network pool] ********************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:19 +0000 (0:00:00.077)       0:23:46.305 ******** 
+
+TASK [network_plugin/calico : Calico | Get current calico network pool blocksize] ************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:19 +0000 (0:00:00.154)       0:23:46.460 ******** 
+
+TASK [network_plugin/calico : Calico | Merge calico network pool] ****************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:19 +0000 (0:00:00.097)       0:23:46.558 ******** 
+
+TASK [network_plugin/calico : Calico | Configure calico network pool] ************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:20 +0000 (0:00:00.383)       0:23:46.942 ******** 
+Saturday 18 April 2026  15:16:20 +0000 (0:00:00.090)       0:23:47.032 ******** 
+Saturday 18 April 2026  15:16:20 +0000 (0:00:00.177)       0:23:47.210 ******** 
+Saturday 18 April 2026  15:16:20 +0000 (0:00:00.137)       0:23:47.348 ******** 
+Saturday 18 April 2026  15:16:20 +0000 (0:00:00.079)       0:23:47.427 ******** 
+Saturday 18 April 2026  15:16:20 +0000 (0:00:00.187)       0:23:47.615 ******** 
+Saturday 18 April 2026  15:16:20 +0000 (0:00:00.024)       0:23:47.639 ******** 
+Saturday 18 April 2026  15:16:20 +0000 (0:00:00.019)       0:23:47.659 ******** 
+Saturday 18 April 2026  15:16:20 +0000 (0:00:00.031)       0:23:47.690 ******** 
+
+TASK [network_plugin/calico : Calico | Get existing BGP Configuration] ***********************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:21 +0000 (0:00:00.366)       0:23:48.057 ******** 
+
+TASK [network_plugin/calico : Calico | Set kubespray BGP Configuration] **********************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:21 +0000 (0:00:00.078)       0:23:48.135 ******** 
+
+TASK [network_plugin/calico : Calico | Process BGP Configuration] ****************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:21 +0000 (0:00:00.071)       0:23:48.207 ******** 
+
+TASK [network_plugin/calico : Calico | Set up BGP Configuration] *****************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:21 +0000 (0:00:00.377)       0:23:48.584 ******** 
+
+TASK [network_plugin/calico : Calico | Create calico manifests] ******************************************************************************************************************************************************************
+ok: [master] => (item={'name': 'calico-config', 'file': 'calico-config.yml', 'type': 'cm'})
+ok: [master] => (item={'name': 'calico-node', 'file': 'calico-node.yml', 'type': 'ds'})
+ok: [master] => (item={'name': 'calico', 'file': 'calico-node-sa.yml', 'type': 'sa'})
+ok: [master] => (item={'name': 'calico', 'file': 'calico-cr.yml', 'type': 'clusterrole'})
+ok: [master] => (item={'name': 'calico', 'file': 'calico-crb.yml', 'type': 'clusterrolebinding'})
+ok: [master] => (item={'name': 'kubernetes-services-endpoint', 'file': 'kubernetes-services-endpoint.yml', 'type': 'cm'})
+Saturday 18 April 2026  15:16:25 +0000 (0:00:03.598)       0:23:52.183 ******** 
+Saturday 18 April 2026  15:16:25 +0000 (0:00:00.088)       0:23:52.271 ******** 
+Saturday 18 April 2026  15:16:25 +0000 (0:00:00.083)       0:23:52.355 ******** 
+Saturday 18 April 2026  15:16:25 +0000 (0:00:00.180)       0:23:52.535 ******** 
+Saturday 18 April 2026  15:16:25 +0000 (0:00:00.114)       0:23:52.650 ******** 
+
+TASK [network_plugin/calico : Start Calico resources] ****************************************************************************************************************************************************************************
+ok: [master] => (item=calico-config.yml)
+ok: [master] => (item=calico-node.yml)
+ok: [master] => (item=calico-node-sa.yml)
+ok: [master] => (item=calico-cr.yml)
+ok: [master] => (item=calico-crb.yml)
+ok: [master] => (item=kubernetes-services-endpoint.yml)
+Saturday 18 April 2026  15:16:28 +0000 (0:00:02.713)       0:23:55.363 ******** 
+Saturday 18 April 2026  15:16:28 +0000 (0:00:00.098)       0:23:55.461 ******** 
+
+TASK [network_plugin/calico : Wait for calico kubeconfig to be created] **********************************************************************************************************************************************************
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:29 +0000 (0:00:00.370)       0:23:55.831 ******** 
+
+TASK [network_plugin/calico : Calico | Create Calico ipam manifests] *************************************************************************************************************************************************************
+ok: [master] => (item={'name': 'calico', 'file': 'calico-ipamconfig.yml', 'type': 'ipam'})
+Saturday 18 April 2026  15:16:29 +0000 (0:00:00.638)       0:23:56.470 ******** 
+
+TASK [network_plugin/calico : Calico | Create ipamconfig resources] **************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:30 +0000 (0:00:01.322)       0:23:57.793 ******** 
+Saturday 18 April 2026  15:16:31 +0000 (0:00:00.091)       0:23:57.884 ******** 
+Saturday 18 April 2026  15:16:31 +0000 (0:00:00.269)       0:23:58.154 ******** 
+Saturday 18 April 2026  15:16:31 +0000 (0:00:00.165)       0:23:58.320 ******** 
+
+PLAY [Install Calico Route Reflector] ********************************************************************************************************************************************************************************************
+skipping: no hosts matched
+
+PLAY [Patch Kubernetes for Windows] **********************************************************************************************************************************************************************************************
+Saturday 18 April 2026  15:16:31 +0000 (0:00:00.155)       0:23:58.475 ******** 
+
+TASK [win_nodes/kubernetes_patch : Ensure that user manifests directory exists] **************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:31 +0000 (0:00:00.267)       0:23:58.743 ******** 
+
+TASK [win_nodes/kubernetes_patch : Check current nodeselector for kube-proxy daemonset] ******************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:32 +0000 (0:00:00.393)       0:23:59.136 ******** 
+
+TASK [win_nodes/kubernetes_patch : Apply nodeselector patch for kube-proxy daemonset] ********************************************************************************************************************************************
+changed: [master]
+Saturday 18 April 2026  15:16:32 +0000 (0:00:00.374)       0:23:59.511 ******** 
+
+TASK [win_nodes/kubernetes_patch : debug] ****************************************************************************************************************************************************************************************
+ok: [master] => {
+    "msg": [
+        "daemonset.apps/kube-proxy patched (no change)"
+    ]
+}
+Saturday 18 April 2026  15:16:32 +0000 (0:00:00.084)       0:23:59.595 ******** 
+
+TASK [win_nodes/kubernetes_patch : debug] ****************************************************************************************************************************************************************************************
+ok: [master] => {
+    "msg": []
+}
+
+PLAY [Install Kubernetes apps] ***************************************************************************************************************************************************************************************************
+Saturday 18 April 2026  15:16:32 +0000 (0:00:00.170)       0:23:59.766 ******** 
+Saturday 18 April 2026  15:16:32 +0000 (0:00:00.024)       0:23:59.790 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.026)       0:23:59.816 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.022)       0:23:59.839 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.095)       0:23:59.935 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.066)       0:24:00.001 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.030)       0:24:00.032 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.033)       0:24:00.066 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.103)       0:24:00.169 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.028)       0:24:00.197 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.024)       0:24:00.222 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.108)       0:24:00.331 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.025)       0:24:00.356 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.028)       0:24:00.385 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.023)       0:24:00.409 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.092)       0:24:00.502 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.035)       0:24:00.538 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.046)       0:24:00.585 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.042)       0:24:00.627 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.045)       0:24:00.672 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.058)       0:24:00.730 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.021)       0:24:00.752 ******** 
+Saturday 18 April 2026  15:16:33 +0000 (0:00:00.031)       0:24:00.783 ******** 
+Saturday 18 April 2026  15:16:34 +0000 (0:00:00.055)       0:24:00.839 ******** 
+
+TASK [policy_controller/calico : Create calico-kube-controllers manifests] *******************************************************************************************************************************************************
+ok: [master] => (item={'name': 'calico-kube-controllers', 'file': 'calico-kube-controllers.yml', 'type': 'deployment'})
+ok: [master] => (item={'name': 'calico-kube-controllers', 'file': 'calico-kube-sa.yml', 'type': 'sa'})
+ok: [master] => (item={'name': 'calico-kube-controllers', 'file': 'calico-kube-cr.yml', 'type': 'clusterrole'})
+ok: [master] => (item={'name': 'calico-kube-controllers', 'file': 'calico-kube-crb.yml', 'type': 'clusterrolebinding'})
+Saturday 18 April 2026  15:16:36 +0000 (0:00:02.505)       0:24:03.344 ******** 
+
+TASK [policy_controller/calico : Start of Calico kube controllers] ***************************************************************************************************************************************************************
+ok: [master] => (item=calico-kube-controllers.yml)
+ok: [master] => (item=calico-kube-sa.yml)
+ok: [master] => (item=calico-kube-cr.yml)
+ok: [master] => (item=calico-kube-crb.yml)
+Saturday 18 April 2026  15:16:38 +0000 (0:00:01.589)       0:24:04.934 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.024)       0:24:04.958 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.023)       0:24:04.982 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.023)       0:24:05.005 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.024)       0:24:05.029 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.027)       0:24:05.056 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.122)       0:24:05.179 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.034)       0:24:05.213 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.034)       0:24:05.248 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.061)       0:24:05.309 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.068)       0:24:05.378 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.026)       0:24:05.404 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.024)       0:24:05.429 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.082)       0:24:05.511 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.060)       0:24:05.571 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.029)       0:24:05.600 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.021)       0:24:05.622 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.025)       0:24:05.647 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.021)       0:24:05.669 ******** 
+Saturday 18 April 2026  15:16:38 +0000 (0:00:00.116)       0:24:05.785 ******** 
+
+TASK [kubernetes-apps/ansible : Kubernetes Apps | Wait for kube-apiserver] *******************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:16:39 +0000 (0:00:00.648)       0:24:06.434 ******** 
+
+TASK [kubernetes-apps/ansible : Kubernetes Apps | CoreDNS] ***********************************************************************************************************************************************************************
+changed: [master] => (item=coredns-clusterrole.yml.j2)
+changed: [master] => (item=coredns-clusterrolebinding.yml.j2)
+changed: [master] => (item=coredns-config.yml.j2)
+changed: [master] => (item=coredns-deployment.yml.j2)
+changed: [master] => (item=coredns-sa.yml.j2)
+changed: [master] => (item=coredns-svc.yml.j2)
+changed: [master] => (item=dns-autoscaler-sa.yml.j2)
+changed: [master] => (item=dns-autoscaler.yml.j2)
+changed: [master] => (item=dns-autoscaler-clusterrole.yml.j2)
+changed: [master] => (item=dns-autoscaler-clusterrolebinding.yml.j2)
+Saturday 18 April 2026  15:16:44 +0000 (0:00:05.226)       0:24:11.661 ******** 
+Saturday 18 April 2026  15:16:44 +0000 (0:00:00.121)       0:24:11.783 ******** 
+
+TASK [kubernetes-apps/ansible : Kubernetes Apps | nodelocalDNS] ******************************************************************************************************************************************************************
+changed: [master] => (item=nodelocaldns-config.yml.j2)
+changed: [master] => (item=nodelocaldns-daemonset.yml.j2)
+changed: [master] => (item=nodelocaldns-sa.yml.j2)
+Saturday 18 April 2026  15:16:46 +0000 (0:00:01.904)       0:24:13.687 ******** 
+Saturday 18 April 2026  15:16:46 +0000 (0:00:00.058)       0:24:13.745 ******** 
+Saturday 18 April 2026  15:16:46 +0000 (0:00:00.039)       0:24:13.785 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.073)       0:24:13.858 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.027)       0:24:13.886 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.023)       0:24:13.909 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.026)       0:24:13.936 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.025)       0:24:13.962 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.027)       0:24:13.989 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.103)       0:24:14.093 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.036)       0:24:14.130 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.024)       0:24:14.155 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.025)       0:24:14.181 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.055)       0:24:14.236 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.043)       0:24:14.279 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.024)       0:24:14.303 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.022)       0:24:14.326 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.032)       0:24:14.359 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.063)       0:24:14.423 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.040)       0:24:14.463 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.022)       0:24:14.486 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.021)       0:24:14.507 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.044)       0:24:14.551 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.062)       0:24:14.614 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.035)       0:24:14.650 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.045)       0:24:14.696 ******** 
+Saturday 18 April 2026  15:16:47 +0000 (0:00:00.092)       0:24:14.788 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.021)       0:24:14.810 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.029)       0:24:14.840 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.021)       0:24:14.861 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.066)       0:24:14.928 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.048)       0:24:14.976 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.092)       0:24:15.069 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.031)       0:24:15.100 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.047)       0:24:15.148 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.064)       0:24:15.212 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.025)       0:24:15.238 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.022)       0:24:15.260 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.072)       0:24:15.332 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.068)       0:24:15.400 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.027)       0:24:15.428 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.026)       0:24:15.455 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.067)       0:24:15.522 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.045)       0:24:15.567 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.047)       0:24:15.615 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.057)       0:24:15.672 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.026)       0:24:15.699 ******** 
+Saturday 18 April 2026  15:16:48 +0000 (0:00:00.037)       0:24:15.737 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.083)       0:24:15.820 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.047)       0:24:15.868 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.027)       0:24:15.896 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.040)       0:24:15.937 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.094)       0:24:16.031 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.023)       0:24:16.055 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.030)       0:24:16.085 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.039)       0:24:16.125 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.058)       0:24:16.184 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.027)       0:24:16.211 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.029)       0:24:16.240 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.030)       0:24:16.270 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.069)       0:24:16.340 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.022)       0:24:16.362 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.031)       0:24:16.394 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.046)       0:24:16.440 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.065)       0:24:16.505 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.025)       0:24:16.530 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.057)       0:24:16.588 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.068)       0:24:16.657 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.024)       0:24:16.681 ******** 
+Saturday 18 April 2026  15:16:49 +0000 (0:00:00.070)       0:24:16.752 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.058)       0:24:16.810 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.026)       0:24:16.837 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.030)       0:24:16.867 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.031)       0:24:16.899 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.033)       0:24:16.932 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.070)       0:24:17.003 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.024)       0:24:17.027 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.032)       0:24:17.059 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.030)       0:24:17.090 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.081)       0:24:17.172 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.029)       0:24:17.201 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.035)       0:24:17.236 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.087)       0:24:17.323 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.025)       0:24:17.349 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.025)       0:24:17.375 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.025)       0:24:17.400 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.070)       0:24:17.470 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.040)       0:24:17.511 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.068)       0:24:17.579 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.037)       0:24:17.617 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.022)       0:24:17.640 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.027)       0:24:17.667 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.023)       0:24:17.691 ******** 
+Saturday 18 April 2026  15:16:50 +0000 (0:00:00.022)       0:24:17.713 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.090)       0:24:17.803 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.025)       0:24:17.829 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.030)       0:24:17.859 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.080)       0:24:17.939 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.046)       0:24:17.985 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.027)       0:24:18.013 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.059)       0:24:18.073 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.025)       0:24:18.098 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.028)       0:24:18.127 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.024)       0:24:18.151 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.033)       0:24:18.185 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.031)       0:24:18.216 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.021)       0:24:18.238 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.081)       0:24:18.319 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.021)       0:24:18.341 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.034)       0:24:18.375 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.035)       0:24:18.410 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.085)       0:24:18.496 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.032)       0:24:18.529 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.026)       0:24:18.556 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.045)       0:24:18.601 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.071)       0:24:18.673 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.029)       0:24:18.703 ******** 
+Saturday 18 April 2026  15:16:51 +0000 (0:00:00.062)       0:24:18.766 ******** 
+Saturday 18 April 2026  15:16:52 +0000 (0:00:00.055)       0:24:18.822 ******** 
+Saturday 18 April 2026  15:16:52 +0000 (0:00:00.027)       0:24:18.849 ******** 
+Saturday 18 April 2026  15:16:52 +0000 (0:00:00.022)       0:24:18.871 ******** 
+Saturday 18 April 2026  15:16:52 +0000 (0:00:00.123)       0:24:18.995 ******** 
+Saturday 18 April 2026  15:16:52 +0000 (0:00:00.055)       0:24:19.050 ******** 
+Saturday 18 April 2026  15:16:52 +0000 (0:00:00.024)       0:24:19.074 ******** 
+Saturday 18 April 2026  15:16:52 +0000 (0:00:00.100)       0:24:19.174 ******** 
+Saturday 18 April 2026  15:16:52 +0000 (0:00:00.026)       0:24:19.201 ******** 
+Saturday 18 April 2026  15:16:52 +0000 (0:00:00.024)       0:24:19.225 ******** 
+Saturday 18 April 2026  15:16:52 +0000 (0:00:00.079)       0:24:19.305 ******** 
+
+PLAY [Apply resolv.conf changes now that cluster DNS is up] **********************************************************************************************************************************************************************
+Saturday 18 April 2026  15:16:52 +0000 (0:00:00.091)       0:24:19.396 ******** 
+
+TASK [adduser : User | Create User Group] ****************************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:52 +0000 (0:00:00.401)       0:24:19.797 ******** 
+
+TASK [adduser : User | Create User] **********************************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:53 +0000 (0:00:00.699)       0:24:20.497 ******** 
+Saturday 18 April 2026  15:16:53 +0000 (0:00:00.089)       0:24:20.586 ******** 
+Saturday 18 April 2026  15:16:53 +0000 (0:00:00.168)       0:24:20.755 ******** 
+Saturday 18 April 2026  15:16:54 +0000 (0:00:00.170)       0:24:20.925 ******** 
+Saturday 18 April 2026  15:16:54 +0000 (0:00:00.086)       0:24:21.012 ******** 
+Saturday 18 April 2026  15:16:54 +0000 (0:00:00.133)       0:24:21.145 ******** 
+
+TASK [kubernetes/preinstall : Check resolvconf] **********************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:54 +0000 (0:00:00.464)       0:24:21.610 ******** 
+
+TASK [kubernetes/preinstall : Check existence of /etc/resolvconf/resolv.conf.d] **************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:55 +0000 (0:00:00.392)       0:24:22.003 ******** 
+
+TASK [kubernetes/preinstall : Check status of /etc/resolv.conf] ******************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:55 +0000 (0:00:00.476)       0:24:22.479 ******** 
+
+TASK [kubernetes/preinstall : Fetch resolv.conf] *********************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:56 +0000 (0:00:00.366)       0:24:22.846 ******** 
+
+TASK [kubernetes/preinstall : NetworkManager | Check if host has NetworkManager] *************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:56 +0000 (0:00:00.465)       0:24:23.312 ******** 
+
+TASK [kubernetes/preinstall : Check systemd-resolved] ****************************************************************************************************************************************************************************
+ok: [node1]
+ok: [master]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:56 +0000 (0:00:00.461)       0:24:23.774 ******** 
+
+TASK [kubernetes/preinstall : Set default dns if remove_default_searchdomains is false] ******************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:57 +0000 (0:00:00.100)       0:24:23.874 ******** 
+
+TASK [kubernetes/preinstall : Set dns facts] *************************************************************************************************************************************************************************************
+ok: [node1]
+ok: [master]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:57 +0000 (0:00:00.196)       0:24:24.071 ******** 
+
+TASK [kubernetes/preinstall : Check if kubelet is configured] ********************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node3]
+ok: [node2]
+Saturday 18 April 2026  15:16:57 +0000 (0:00:00.395)       0:24:24.466 ******** 
+
+TASK [kubernetes/preinstall : Check if early DNS configuration stage] ************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:57 +0000 (0:00:00.104)       0:24:24.570 ******** 
+
+TASK [kubernetes/preinstall : Target resolv.conf files] **************************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:57 +0000 (0:00:00.213)       0:24:24.783 ******** 
+Saturday 18 April 2026  15:16:58 +0000 (0:00:00.177)       0:24:24.961 ******** 
+
+TASK [kubernetes/preinstall : Check if /etc/dhclient.conf exists] ****************************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:58 +0000 (0:00:00.406)       0:24:25.368 ******** 
+Saturday 18 April 2026  15:16:58 +0000 (0:00:00.209)       0:24:25.577 ******** 
+
+TASK [kubernetes/preinstall : Check if /etc/dhcp/dhclient.conf exists] ***********************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node3]
+ok: [node2]
+Saturday 18 April 2026  15:16:59 +0000 (0:00:00.364)       0:24:25.942 ******** 
+
+TASK [kubernetes/preinstall : Target dhclient conf file for /etc/dhcp/dhclient.conf] *********************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:59 +0000 (0:00:00.151)       0:24:26.094 ******** 
+Saturday 18 April 2026  15:16:59 +0000 (0:00:00.108)       0:24:26.202 ******** 
+
+TASK [kubernetes/preinstall : Target dhclient hook file for Debian family] *******************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:16:59 +0000 (0:00:00.159)       0:24:26.362 ******** 
+Saturday 18 April 2026  15:16:59 +0000 (0:00:00.119)       0:24:26.481 ******** 
+
+TASK [kubernetes/preinstall : Check /usr readonly] *******************************************************************************************************************************************************************************
+ok: [master]
+ok: [node2]
+ok: [node1]
+ok: [node3]
+Saturday 18 April 2026  15:17:00 +0000 (0:00:00.405)       0:24:26.887 ******** 
+Saturday 18 April 2026  15:17:00 +0000 (0:00:00.097)       0:24:26.984 ******** 
+Saturday 18 April 2026  15:17:00 +0000 (0:00:00.074)       0:24:27.059 ******** 
+Saturday 18 April 2026  15:17:00 +0000 (0:00:00.073)       0:24:27.133 ******** 
+Saturday 18 April 2026  15:17:00 +0000 (0:00:00.122)       0:24:27.255 ******** 
+Saturday 18 April 2026  15:17:00 +0000 (0:00:00.139)       0:24:27.395 ******** 
+Saturday 18 April 2026  15:17:00 +0000 (0:00:00.131)       0:24:27.526 ******** 
+Saturday 18 April 2026  15:17:00 +0000 (0:00:00.121)       0:24:27.648 ******** 
+Saturday 18 April 2026  15:17:00 +0000 (0:00:00.085)       0:24:27.733 ******** 
+Saturday 18 April 2026  15:17:01 +0000 (0:00:00.135)       0:24:27.868 ******** 
+Saturday 18 April 2026  15:17:01 +0000 (0:00:00.142)       0:24:28.011 ******** 
+Saturday 18 April 2026  15:17:01 +0000 (0:00:00.096)       0:24:28.107 ******** 
+Saturday 18 April 2026  15:17:01 +0000 (0:00:00.085)       0:24:28.193 ******** 
+Saturday 18 April 2026  15:17:01 +0000 (0:00:00.128)       0:24:28.322 ******** 
+Saturday 18 April 2026  15:17:01 +0000 (0:00:00.124)       0:24:28.447 ******** 
+Saturday 18 April 2026  15:17:01 +0000 (0:00:00.092)       0:24:28.539 ******** 
+Saturday 18 April 2026  15:17:01 +0000 (0:00:00.200)       0:24:28.740 ******** 
+Saturday 18 April 2026  15:17:02 +0000 (0:00:00.122)       0:24:28.862 ******** 
+Saturday 18 April 2026  15:17:02 +0000 (0:00:00.099)       0:24:28.962 ******** 
+Saturday 18 April 2026  15:17:02 +0000 (0:00:00.156)       0:24:29.118 ******** 
+Saturday 18 April 2026  15:17:02 +0000 (0:00:00.194)       0:24:29.313 ******** 
+Saturday 18 April 2026  15:17:02 +0000 (0:00:00.100)       0:24:29.413 ******** 
+Saturday 18 April 2026  15:17:02 +0000 (0:00:00.142)       0:24:29.556 ******** 
+Saturday 18 April 2026  15:17:02 +0000 (0:00:00.111)       0:24:29.667 ******** 
+Saturday 18 April 2026  15:17:03 +0000 (0:00:00.161)       0:24:29.828 ******** 
+Saturday 18 April 2026  15:17:03 +0000 (0:00:00.190)       0:24:30.018 ******** 
+Saturday 18 April 2026  15:17:03 +0000 (0:00:00.175)       0:24:30.194 ******** 
+Saturday 18 April 2026  15:17:03 +0000 (0:00:00.141)       0:24:30.336 ******** 
+
+TASK [kubernetes/preinstall : Create systemd-resolved drop-in directory] *********************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:17:03 +0000 (0:00:00.381)       0:24:30.717 ******** 
+
+TASK [kubernetes/preinstall : Write Kubespray DNS settings to systemd-resolved] **************************************************************************************************************************************************
+changed: [node1]
+changed: [master]
+changed: [node3]
+changed: [node2]
+Saturday 18 April 2026  15:17:04 +0000 (0:00:01.018)       0:24:31.736 ******** 
+Saturday 18 April 2026  15:17:05 +0000 (0:00:00.144)       0:24:31.881 ******** 
+Saturday 18 April 2026  15:17:05 +0000 (0:00:00.137)       0:24:32.018 ******** 
+Saturday 18 April 2026  15:17:05 +0000 (0:00:00.162)       0:24:32.180 ******** 
+Saturday 18 April 2026  15:17:05 +0000 (0:00:00.181)       0:24:32.362 ******** 
+Saturday 18 April 2026  15:17:05 +0000 (0:00:00.136)       0:24:32.499 ******** 
+Saturday 18 April 2026  15:17:05 +0000 (0:00:00.129)       0:24:32.629 ******** 
+Saturday 18 April 2026  15:17:06 +0000 (0:00:00.222)       0:24:32.851 ******** 
+Saturday 18 April 2026  15:17:06 +0000 (0:00:00.128)       0:24:32.979 ******** 
+Saturday 18 April 2026  15:17:06 +0000 (0:00:00.124)       0:24:33.103 ******** 
+Saturday 18 April 2026  15:17:06 +0000 (0:00:00.099)       0:24:33.203 ******** 
+Saturday 18 April 2026  15:17:06 +0000 (0:00:00.209)       0:24:33.412 ******** 
+Saturday 18 April 2026  15:17:06 +0000 (0:00:00.076)       0:24:33.488 ******** 
+Saturday 18 April 2026  15:17:06 +0000 (0:00:00.177)       0:24:33.665 ******** 
+Saturday 18 April 2026  15:17:06 +0000 (0:00:00.089)       0:24:33.755 ******** 
+Saturday 18 April 2026  15:17:07 +0000 (0:00:00.122)       0:24:33.878 ******** 
+Saturday 18 April 2026  15:17:07 +0000 (0:00:00.128)       0:24:34.006 ******** 
+Saturday 18 April 2026  15:17:07 +0000 (0:00:00.110)       0:24:34.117 ******** 
+Saturday 18 April 2026  15:17:07 +0000 (0:00:00.128)       0:24:34.246 ******** 
+Saturday 18 April 2026  15:17:07 +0000 (0:00:00.149)       0:24:34.396 ******** 
+Saturday 18 April 2026  15:17:07 +0000 (0:00:00.172)       0:24:34.568 ******** 
+Saturday 18 April 2026  15:17:07 +0000 (0:00:00.082)       0:24:34.651 ******** 
+Saturday 18 April 2026  15:17:08 +0000 (0:00:00.190)       0:24:34.841 ******** 
+Saturday 18 April 2026  15:17:08 +0000 (0:00:00.082)       0:24:34.923 ******** 
+Saturday 18 April 2026  15:17:08 +0000 (0:00:00.131)       0:24:35.054 ******** 
+Saturday 18 April 2026  15:17:08 +0000 (0:00:00.145)       0:24:35.199 ******** 
+Saturday 18 April 2026  15:17:08 +0000 (0:00:00.116)       0:24:35.316 ******** 
+Saturday 18 April 2026  15:17:08 +0000 (0:00:00.205)       0:24:35.521 ******** 
+Saturday 18 April 2026  15:17:08 +0000 (0:00:00.085)       0:24:35.606 ******** 
+Saturday 18 April 2026  15:17:08 +0000 (0:00:00.126)       0:24:35.733 ******** 
+Saturday 18 April 2026  15:17:09 +0000 (0:00:00.131)       0:24:35.865 ******** 
+Saturday 18 April 2026  15:17:09 +0000 (0:00:00.074)       0:24:35.939 ******** 
+Saturday 18 April 2026  15:17:09 +0000 (0:00:00.116)       0:24:36.056 ******** 
+Saturday 18 April 2026  15:17:09 +0000 (0:00:00.118)       0:24:36.174 ******** 
+
+TASK [kubernetes/preinstall : Configure dhclient to supersede search/domain/nameservers] *****************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node3]
+ok: [node2]
+Saturday 18 April 2026  15:17:09 +0000 (0:00:00.424)       0:24:36.599 ******** 
+
+TASK [kubernetes/preinstall : Configure dhclient hooks for resolv.conf (non-RH)] *************************************************************************************************************************************************
+ok: [master]
+ok: [node1]
+ok: [node2]
+ok: [node3]
+Saturday 18 April 2026  15:17:10 +0000 (0:00:00.755)       0:24:37.354 ******** 
+Saturday 18 April 2026  15:17:10 +0000 (0:00:00.191)       0:24:37.546 ******** 
+Saturday 18 April 2026  15:17:10 +0000 (0:00:00.087)       0:24:37.634 ******** 
+Saturday 18 April 2026  15:17:10 +0000 (0:00:00.160)       0:24:37.794 ******** 
+Saturday 18 April 2026  15:17:11 +0000 (0:00:00.016)       0:24:37.810 ******** 
+Saturday 18 April 2026  15:17:11 +0000 (0:00:00.015)       0:24:37.826 ******** 
+Saturday 18 April 2026  15:17:11 +0000 (0:00:00.013)       0:24:37.839 ******** 
+Saturday 18 April 2026  15:17:11 +0000 (0:00:00.061)       0:24:37.901 ******** 
+
+RUNNING HANDLER [kubernetes/preinstall : Preinstall | Restart systemd-resolved] **************************************************************************************************************************************************
+changed: [node2]
+changed: [master]
+changed: [node1]
+changed: [node3]
+Saturday 18 April 2026  15:17:11 +0000 (0:00:00.819)       0:24:38.720 ******** 
+Saturday 18 April 2026  15:17:12 +0000 (0:00:00.188)       0:24:38.908 ******** 
+
+TASK [Run calico checks] *********************************************************************************************************************************************************************************************************
+included: network_plugin/calico for master, node1, node2, node3
+Saturday 18 April 2026  15:17:12 +0000 (0:00:00.410)       0:24:39.319 ******** 
+
+TASK [network_plugin/calico : Stop if legacy encapsulation variables are detected (ipip)] ****************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:17:12 +0000 (0:00:00.112)       0:24:39.431 ******** 
+
+TASK [network_plugin/calico : Stop if legacy encapsulation variables are detected (ipip_mode)] ***********************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:17:12 +0000 (0:00:00.289)       0:24:39.720 ******** 
+
+TASK [network_plugin/calico : Stop if legacy encapsulation variables are detected (calcio_ipam_autoallocateblocks)] **************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:17:13 +0000 (0:00:00.328)       0:24:40.049 ******** 
+
+TASK [network_plugin/calico : Stop if supported Calico versions] *****************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:17:13 +0000 (0:00:00.075)       0:24:40.126 ******** 
+
+TASK [network_plugin/calico : Check if calicoctl.sh exists] **********************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:17:23 +0000 (0:00:10.314)       0:24:50.440 ******** 
+
+TASK [network_plugin/calico : Check if calico ready] *****************************************************************************************************************************************************************************
+changed: [master]
+Saturday 18 April 2026  15:17:33 +0000 (0:00:10.328)       0:25:00.769 ******** 
+
+TASK [network_plugin/calico : Get current calico version] ************************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:17:44 +0000 (0:00:10.364)       0:25:11.133 ******** 
+
+TASK [network_plugin/calico : Assert that current calico version is enough for upgrade] ******************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:17:44 +0000 (0:00:00.045)       0:25:11.179 ******** 
+Saturday 18 April 2026  15:17:44 +0000 (0:00:00.031)       0:25:11.211 ******** 
+Saturday 18 April 2026  15:17:44 +0000 (0:00:00.048)       0:25:11.260 ******** 
+
+TASK [network_plugin/calico : Check vars defined correctly] **********************************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:17:44 +0000 (0:00:00.105)       0:25:11.366 ******** 
+
+TASK [network_plugin/calico : Check calico network backend defined correctly] ****************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:17:44 +0000 (0:00:00.052)       0:25:11.418 ******** 
+
+TASK [network_plugin/calico : Check ipip and vxlan mode defined correctly] *******************************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:17:44 +0000 (0:00:00.064)       0:25:11.483 ******** 
+Saturday 18 April 2026  15:17:44 +0000 (0:00:00.066)       0:25:11.549 ******** 
+
+TASK [network_plugin/calico : Check ipip and vxlan mode if simultaneously enabled] ***********************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:17:44 +0000 (0:00:00.048)       0:25:11.598 ******** 
+
+TASK [network_plugin/calico : Get Calico default-pool configuration] *************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:17:55 +0000 (0:00:10.345)       0:25:21.944 ******** 
+
+TASK [network_plugin/calico : Set calico_pool_conf] ******************************************************************************************************************************************************************************
+ok: [master]
+Saturday 18 April 2026  15:17:55 +0000 (0:00:00.080)       0:25:22.024 ******** 
+
+TASK [network_plugin/calico : Check if inventory match current cluster configuration] ********************************************************************************************************************************************
+ok: [master] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+Saturday 18 April 2026  15:17:55 +0000 (0:00:00.055)       0:25:22.080 ******** 
+Saturday 18 April 2026  15:17:55 +0000 (0:00:00.086)       0:25:22.167 ******** 
+Saturday 18 April 2026  15:17:55 +0000 (0:00:00.034)       0:25:22.202 ******** 
+Saturday 18 April 2026  15:17:55 +0000 (0:00:00.037)       0:25:22.240 ******** 
+Saturday 18 April 2026  15:17:55 +0000 (0:00:00.042)       0:25:22.282 ******** 
+Saturday 18 April 2026  15:17:55 +0000 (0:00:00.027)       0:25:22.309 ******** 
+
+PLAY RECAP ***********************************************************************************************************************************************************************************************************************
+master                     : ok=591  changed=43   unreachable=0    failed=0    skipped=820  rescued=0    ignored=0   
+node1                      : ok=410  changed=21   unreachable=0    failed=0    skipped=474  rescued=0    ignored=0   
+node2                      : ok=410  changed=21   unreachable=0    failed=0    skipped=473  rescued=0    ignored=0   
+node3                      : ok=410  changed=21   unreachable=0    failed=0    skipped=473  rescued=0    ignored=0   
+
+
+TASKS RECAP **********************************************************************************************************************************************************************************************************************
+Saturday 18 April 2026  15:17:55 +0000 (0:00:00.134)       0:25:22.444 ******** 
+=============================================================================== 
+kubernetes/preinstall : Ensure kubelet expected parameters are set ------------------------------------------------------------------------------------------------------------------------------------------------------- 84.36s
+kubernetes/preinstall : Create kubernetes directories -------------------------------------------------------------------------------------------------------------------------------------------------------------------- 59.34s
+download : Download_file | Download item --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 49.32s
+download : Download_file | Download item --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 42.56s
+bootstrap_os : Assign inventory name to unconfigured hostnames (non-CoreOS, non-Flatcar, Suse and ClearLinux, non-Fedora) ------------------------------------------------------------------------------------------------ 40.37s
+Gather necessary facts (hardware) ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 30.60s
+kubernetes/preinstall : Create other directories of root owner ----------------------------------------------------------------------------------------------------------------------------------------------------------- 30.17s
+kubernetes/preinstall : Remove swapfile from /etc/fstab ------------------------------------------------------------------------------------------------------------------------------------------------------------------ 30.02s
+Gather necessary facts (network) ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 30.02s
+kubernetes/preinstall : Create cni directories --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 29.89s
+bootstrap_os : Gather facts ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 29.82s
+network_facts : Gather node IPs ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ 29.81s
+system_packages : Manage packages ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 29.63s
+kubernetes/preinstall : Write Kubespray DNS settings to systemd-resolved ------------------------------------------------------------------------------------------------------------------------------------------------- 29.61s
+kubernetes/preinstall : Clean previously used sysctl file locations ------------------------------------------------------------------------------------------------------------------------------------------------------ 29.15s
+system_packages : Gather OS information ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 26.58s
+kubernetes/preinstall : Configure dhclient hooks for resolv.conf (non-RH) ------------------------------------------------------------------------------------------------------------------------------------------------ 26.12s
+Gather minimal facts ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 20.60s
+container-engine/runc : Download_file | Download item -------------------------------------------------------------------------------------------------------------------------------------------------------------------- 19.96s
+adduser : User | Create User Group --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 19.69s
