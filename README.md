@@ -212,7 +212,7 @@ ________________________________________
 -	Yandex Cloud IAM — система управления доступом 
 ```
 
-![1](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/1.png?ref_type=heads)
+![1](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/1.png)
 
 3.  Описание реализованной инфраструктуры
 
@@ -239,7 +239,8 @@ infra/
 Данный аккаунт используется для выполнения операций создания, изменения и удаления облачных ресурсов.
 ```
 
-![2](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/2.png?ref_type=heads)
+![2](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/2.png)
+
 
     3.3.    Назначение ролей (IAM)
 
@@ -252,7 +253,7 @@ infra/
 Применён принцип минимально необходимых привилегий (Least Privilege), что повышает безопасность инфраструктуры.
 ```
 
-![4](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/4.png?ref_type=heads)
+![4](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/4.png)
 
     3.4.    Аутентификация Terraform
 
@@ -284,7 +285,7 @@ Terraform был настроен на работу с Yandex Cloud через �
 Эти данные могут использоваться для дальнейшей настройки backend хранения состояния Terraform.
 ```
 
-![3](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/3.png?ref_type=heads)
+![3](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/3.png)
 
 
 4.  Результаты выполнения этапа
@@ -405,9 +406,9 @@ Backend был настроен в файле backend.tf:
 
     - имя: main-network 
 
-![7](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/7.png?ref_type=heads)
+![7](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/7.png)
 
-![9](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/9.png?ref_type=heads)
+![9](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/9.png)
 
     4.2.    Создание подсетей
 
@@ -421,9 +422,9 @@ Backend был настроен в файле backend.tf:
     subnet-d	    ru-central1-d	    10.30.0.0/24
 ```		
 		
-![6](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/6.png?ref_type=heads)
+![6](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/6.png)
 
-![13](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/13.png?ref_type=heads)
+![13](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/13.png)
 
     4.3.    Назначение подсетей
 
@@ -602,11 +603,11 @@ master
     node3 
 ```
 
-![16](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/16.png?ref_type=heads)
+![16](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/16.png)
 
-![71](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/71.png?ref_type=heads)
+![71](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/71.png)
 
-![15](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/15.png?ref_type=heads)
+![15](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/15.png)
 
 
     2.4.    Вывод Terraform
@@ -632,7 +633,7 @@ ansible all -i inventory/mycluster/inventory.ini -m ping -u Ubuntu
 SUCCESS => pong
 ```
 
-![18](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/18.png?ref_type=heads)
+![18](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/18.png)
 
     3.2.    Inventory
 
@@ -682,7 +683,7 @@ ansible-playbook -i inventory/mycluster/inventory.ini -u ubuntu cluster.yml --be
 
 Kubespray установит Kubernetes (kubeadm), настроит сети, etcd и т.д.
 
-![19](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/1.png?ref_type=heads)
+![19](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/19.png)
 
 
 <details>
@@ -3375,7 +3376,8 @@ sudo chown ubuntu:ubuntu ~/.kube/config
 export KUBECONFIG=$HOME/.kube/config
 ```
 
-![21](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/21.png?ref_type=heads)
+![21](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/21.png)
+
 
 - Ошибка 4: bastion / calico_rr warnings
 ```
@@ -3405,7 +3407,7 @@ kubectl get pods –A
 Running
 ```
 
-![20](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/20.png?ref_type=heads)
+![20](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/20.png)
 
 
 6.  Итоговый результат
@@ -3536,7 +3538,7 @@ docker build -t test-app:1.0.1 .
 - приложение становится полностью контейнеризированным 
 ```
 
-![23](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/23.png?ref_type=heads)
+![23](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/23.png)
 
 
 6.	Запуск контейнера
@@ -3578,7 +3580,7 @@ gh repo create test-app \
 
 код хранится в GitHub и доступен для дальнейшего CI/CD и версионирования 
 
-![24](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/24.png?ref_type=heads)
+![24](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/24.png)
 
 
 9.	Docker Registry (DockerHub)
@@ -3595,7 +3597,7 @@ docker push ivanshkutov/test-app:1.0.1
 
 образ доступен в публичном Docker registry и может использоваться в Kubernetes 
 
-![25](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/25.png?ref_type=heads)
+![25](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/25.png)
 
 
 10. Итоговый результат
@@ -3609,9 +3611,9 @@ docker push ivanshkutov/test-app:1.0.1
 ✔ Проверка работы приложения через HTTP 
 ```
 
-![26](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/26.png?ref_type=heads)
+![26](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/26.png)
 
-![28](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/28.png?ref_type=heads)
+![28](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/28.png)
 
 
 11. Вывод по этапу
@@ -3707,7 +3709,8 @@ bash
 kubectl get nodes -o wide
 ```
 
-![30](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/30.png?ref_type=heads)
+![30](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/30.png)
+
 
 <details>
   <summary> Выполнение развертывания системы мониторинга: Prometheus, Grafana, Alertmanager, Node Exporter </summary>
@@ -4017,7 +4020,8 @@ kubectl apply -f manifests/
 kubectl get pods -n monitoring
 ```
 
-![31](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/31.png?ref_type=heads)
+![31](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/31.png)
+
 
 Должны быть:
 ```
@@ -4027,7 +4031,8 @@ kubectl get pods -n monitoring
 -	Node-exporter
 ```
 
-![32](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/32.png?ref_type=heads)
+![32](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/32.png)
+
 
 Доступ к сервисам (через SSH tunnel)
 ```
@@ -4039,7 +4044,8 @@ ssh -L 3000:localhost:3000 \
     ubuntu@<EXTERNAL_IP_MASTER>
 ```
 
-![40](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/40.png?ref_type=heads)
+![40](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/40.png)
+
 
 Запуск port-forward (на сервере)
 ```
@@ -4060,23 +4066,24 @@ Alertmanager - http://localhost:9093
 
 
 
-![44](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/44.png?ref_type=heads)
+![44](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/44.png)
 
-![52](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/52.png?ref_type=heads)
+![52](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/52.png)
 
-![46](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/46.png?ref_type=heads)
+![46](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/46.png)
 
-![34](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/34.png?ref_type=heads)
+![34](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/34.png)
 
-![39](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/39.png?ref_type=heads)
+![39](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/39.png)
 
-![48](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/48.png?ref_type=heads)
+![48](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/48.png)
 
-![49](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/49.png?ref_type=heads)
+![49](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/49.png)
 
-![50](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/50.png?ref_type=heads)
+![50](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/50.png)
 
-![51](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/51.png?ref_type=heads)
+![51](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/51.png)
+
 
 
 3.	Деплой тестового приложения (nginx)
@@ -4124,7 +4131,8 @@ docker run -d -p 8080:80 test-app
     Кластер  - kubectl get nodes
     Поды     - kubectl get pods -A
 
-![35](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/35.png?ref_type=heads)
+![35](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/35.png)
+
 
 5.  Push в Docker Hub
 ```
@@ -4211,7 +4219,8 @@ http://<IP-адрес-любого-нод>:30080
 
 Например, на одном из worker нод (в нашем случае порты 80 проброшены на 30080). Должна открыться статическая страница nginx.
 
-![55](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/55.png?ref_type=heads)
+![55](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/55.png)
+
 
 5.	Итоговый результат
 
@@ -4298,7 +4307,8 @@ ________________________________________
 
 Настроим GitHub Actions для автоматической сборки Docker-образа и деплоя в K8s.
 
-![56](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/56.png?ref_type=heads)
+![56](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/56.png)
+
 
 Логика пайплайна:
 
@@ -4313,21 +4323,23 @@ GitHub push в ветку main или tag (например, v1.0.1)
    ↓
 Выполняем: kubectl set image
 ```
-![61](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/61.png?ref_type=heads)
+![61](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/61.png)
+
 
 То есть, при каждом пуше в main: билдим и пушим образ с тэгом `latest`.  
 
 При push tag вида `v\*`: build образа с этим тэгом, push и выполняем обновление deployment в кластере.
 
-![65](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/65.png?ref_type=heads)
+![65](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/65.png)
 
-![66](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/66.png?ref_type=heads)
+![66](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/66.png)
 
-![67](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/67.png?ref_type=heads)
+![67](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/67.png)
 
-![68](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/68.png?ref_type=heads)
+![68](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/68.png)
 
-![69](https://gitlab.cactus.local/user013/diplom/-/blob/main/png/69.png?ref_type=heads)
+![69](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/69.png)
+
 
 В этом yaml:
 
