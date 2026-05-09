@@ -623,6 +623,8 @@ master
 
 ![011](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/011.png)
 
+![04](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/04.png)
+
 ![05](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/05.png)
 
 ![06](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/06.png)
