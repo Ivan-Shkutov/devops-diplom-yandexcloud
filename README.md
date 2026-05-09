@@ -4237,7 +4237,7 @@ http://<IP-адрес-любого-нод>:30080
 
 Например, на одном из worker нод (в нашем случае порты 80 проброшены на 30080). Должна открыться статическая страница nginx.
 
-![55](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/55.png)
+![001](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/001.png)
 
 
 5.	Итоговый результат
