@@ -627,15 +627,8 @@ master
     2.4.    Вывод Terraform
 
 terraform output
-```
-Пример:
-master_ip = "111.88.241.66"
-worker_ips = [
-  "111.88.249.57",
-  "46.243.211.237",
-  "81.26.190.111"
-]
-```
+
+![013](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/013.png)
 
 3.  Подготовка Ansible (Kubespray)
 
