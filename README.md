@@ -522,9 +522,23 @@ ________________________________________
 
 ```
 infra/
+└── 03-k8s/
+	├── bastion.tf    	 	# конфигурация провайдера Yandex Cloud
+	├── k8s-vm.tf   		# переменные (cloud_id, folder_id, token)
+	├── network.tf         	# сервисный аккаунт
+	├── outputs.tf       	# выходные значения
+	├── provider.tf        	# ключ доступа (static access key)
+	├── security.tf     	# конфигурация провайдера Yandex Cloud
+	├── variables.tf   		# переменные (cloud_id, folder_id, token)
+	├── terraform.tfvars   	# сервисный аккаунт
+	└── terraform.tfstate  	# выходные значения
+```    
+
+```
+infra/
     ├── 01-bootstrap/   # например, создание учетных записей, ключей, S3 бакета для state
     ├── 02-network/     # сеть: VPC, подсети, NAT, gateway
-    ├── 03-k8s/         # виртуальные машины под кластер Kubernetes
+    └── 03-k8s/         # виртуальные машины + bastion под кластер Kubernetes
 ```
 
 Каждый каталог содержит свои `\*.tf`-файлы. Такой подход (мульти-модульная структура) — хорош, потому что инфраструктура разбита на смысловые части.
@@ -605,9 +619,9 @@ master
 
 ![16](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/16.png)
 
-![71](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/71.png)
+![03](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/03.png)
 
-![15](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/15.png)
+![011](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/011.png)
 
 
     2.4.    Вывод Terraform
