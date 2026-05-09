@@ -633,7 +633,7 @@ master
 
 terraform output
 
-![013](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/013.png)
+![014](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/014.png)
 
 ![010](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/010.png)
 
