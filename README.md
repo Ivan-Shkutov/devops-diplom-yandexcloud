@@ -655,10 +655,10 @@ cp -r inventory/sample inventory/mycluster
 
 ```
 [all]
-master ansible_host=111.88.241.66   ip=10.10.0.3
-node1  ansible_host=111.88.249.57   ip=10.10.0.13
-node2  ansible_host=46.243.211.237  ip=10.20.0.14
-node3  ansible_host=81.26.190.111   ip=10.30.0.18
+master ansible_host=10.10.0.3
+node1  ansible_host=10.10.0.13
+node2  ansible_host=10.20.0.14
+node3  ansible_host=10.30.0.18
 
 [kube_control_plane]
 master
