@@ -3383,6 +3383,8 @@ sudo chown ubuntu:ubuntu ~/.kube/config
 export KUBECONFIG=$HOME/.kube/config
 ```
 
+![010](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/010.png)
+
 ![21](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/21.png)
 
 
