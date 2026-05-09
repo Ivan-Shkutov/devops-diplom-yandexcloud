@@ -623,12 +623,19 @@ master
 
 ![011](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/011.png)
 
+![05](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/05.png)
+
+![06](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/06.png)
+
+![09](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/09.png)
 
     2.4.    Вывод Terraform
 
 terraform output
 
 ![013](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/013.png)
+
+![010](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/010.png)
 
 3.  Подготовка Ansible (Kubespray)
 
