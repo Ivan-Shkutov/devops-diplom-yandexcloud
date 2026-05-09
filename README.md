@@ -3414,7 +3414,7 @@ kubectl get pods –A
 Running
 ```
 
-![20](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/20.png)
+![012](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/012.png)
 
 
 6.  Итоговый результат
