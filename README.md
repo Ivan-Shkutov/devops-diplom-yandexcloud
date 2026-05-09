@@ -523,15 +523,15 @@ ________________________________________
 ```
 infra/
 └── 03-k8s/
-	├── bastion.tf    	 	# конфигурация провайдера Yandex Cloud
-	├── k8s-vm.tf   		# переменные (cloud_id, folder_id, token)
-	├── network.tf         	# сервисный аккаунт
+	├── bastion.tf    	 	# конфигурация bastion-хоста
+	├── k8s-vm.tf   		# виртуальные машины Kubernetes
+	├── network.tf         	# настройка сети, NAT и маршрутизации
 	├── outputs.tf       	# выходные значения
-	├── provider.tf        	# ключ доступа (static access key)
-	├── security.tf     	# конфигурация провайдера Yandex Cloud
-	├── variables.tf   		# переменные (cloud_id, folder_id, token)
-	├── terraform.tfvars   	# сервисный аккаунт
-	└── terraform.tfstate  	# выходные значения
+	├── provider.tf        	# конфигурация подключения к Yandex Cloud
+	├── security.tf     	# группы безопасности
+	├── variables.tf   		# описание входных параметров и переменные (cloud_id, folder_id, token)
+	├── terraform.tfvars   	# значения переменных
+	└── terraform.tfstate  	# файл состояния Terraform
 ```    
 
 ```
@@ -609,13 +609,81 @@ provider "yandex" {
 
     2.3.    VM (03-k8s)
 
-Создаются 4 машины. Каждая подключена к своей подсети.
+Были созданы ресурсы:
+
 ```
-master 
-    node1 
-    node2 
-    node3 
+Compute instances:
+	- bastion
+	- master
+	- 3 worker nodes
+
+Network:
+	- VPC network
+	- 3 subnets (a, b, c)
+
+Security:
+	- bastion-sg (SSH доступ)
+	- k8s-sg (internal cluster communication)
+
 ```
+```
+	Была реализована следующая структура:
+
+Internet
+   │
+   ▼
+Bastion (public IP: 51.250.80.168)
+   │
+   ▼
+Private network (10.10.0.0 / 10.20.0.0 / 10.30.0.0)
+   │
+   ├── master (10.10.0.3)
+   ├── node1 (10.10.0.13)
+   ├── node2 (10.20.0.14)
+   └── node3 (10.30.0.18)
+```
+	
+Для обеспечения выхода Kubernetes nodes в интернет был добавлен NAT Gateway:
+```
+resource "yandex_vpc_gateway" "nat" {
+  name = "nat-gateway"
+  shared_egress_gateway {}
+}
+
+resource "yandex_vpc_route_table" "rt" {
+  name       = "private-route-table"
+  network_id = data.yandex_vpc_network.main.id
+
+  static_route {
+    destination_prefix = "0.0.0.0/0"
+    gateway_id         = yandex_vpc_gateway.nat.id
+  }
+}
+
+```
+В результате:
+
+✔ Развернут Kubernetes cluster
+✔ Реализована приватная сеть
+✔ Добавлен bastion access
+✔ Добавлен NAT Gateway
+✔ Настроен Terraform IaC
+✔ Устранены сетевые и routing ошибки
+
+Основная цель проекта заключалась в построении отказоустойчивой и безопасной архитектуры, приближенной к production-среде. 
+
+Была создана облачная инфраструктура, включающая виртуальные машины для Kubernetes control plane и worker nodes, а также отдельный bastion host для безопасного доступа в приватную сеть.
+
+Все узлы кластера размещены в приватных подсетях и не имеют публичных IP-адресов, что повышает уровень безопасности.
+
+Для доступа к master-узлу используется SSH jump через bastion-хост.
+
+На уровне сети была реализована VPC с несколькими подсетями в разных зонах доступности, что обеспечивает базовую отказоустойчивость.
+
+Security Groups были настроены таким образом, чтобы ограничить доступ только необходимыми портами: SSH для bastion и Kubernetes API и служебные порты внутри кластера.
+
+Реализовал NAT Gateway и route table в Yandex Cloud. Это позволило узлам в приватных подсетях получать доступ в интернет для установки обновлений и загрузки зависимостей, при этом оставаясь недоступными извне.
+	
 
 ![16](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/16.png)
 
