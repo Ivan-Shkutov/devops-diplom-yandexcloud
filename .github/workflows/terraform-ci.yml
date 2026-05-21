@@ -1,0 +1,149 @@
+name: Terraform CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  # 1. Checkout repository
+  checkout:
+    name: 01 - Checkout Repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+
+  # 2. Setup Terraform
+  terraform-setup:
+    name: 02 - Setup Terraform
+    runs-on: ubuntu-latest
+    needs: checkout
+
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Check Terraform version
+        run: terraform version
+
+
+  # 3. Terraform format check
+  terraform-fmt:
+    name: 03 - Terraform Format Check
+    runs-on: ubuntu-latest
+    needs: terraform-setup
+
+    strategy:
+      matrix:
+        directory:
+          - diplom/infra/01-bootstrap
+          - diplom/infra/02-network
+          - diplom/infra/03-k8s
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.directory }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform fmt
+        run: terraform fmt -check -recursive
+
+
+  # 4. Terraform init
+  terraform-init:
+    name: 04 - Terraform Init
+    runs-on: ubuntu-latest
+    needs: terraform-fmt
+
+    strategy:
+      matrix:
+        directory:
+          - diplom/infra/01-bootstrap
+          - diplom/infra/02-network
+          - diplom/infra/03-k8s
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.directory }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init
+        run: terraform init -backend=false
+
+
+  # 5. Terraform validate
+  terraform-validate:
+    name: 05 - Terraform Validate
+    runs-on: ubuntu-latest
+    needs: terraform-init
+
+    strategy:
+      matrix:
+        directory:
+          - diplom/infra/01-bootstrap
+          - diplom/infra/02-network
+          - diplom/infra/03-k8s
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.directory }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init
+        run: terraform init -backend=false
+
+      - name: Terraform validate
+        run: terraform validate
+
+
+  # 6. Terraform plan
+  terraform-plan:
+    name: 06 - Terraform Plan
+    runs-on: ubuntu-latest
+    needs: terraform-validate
+
+    strategy:
+      matrix:
+        directory:
+          - diplom/infra/01-bootstrap
+          - diplom/infra/02-network
+          - diplom/infra/03-k8s
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.directory }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init
+        run: terraform init -backend=false
+
+      - name: Terraform plan
+        env:
+          YC_TOKEN: ${{ secrets.YC_TOKEN }}
+          YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+          YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+        run: terraform plan -input=false
