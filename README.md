@@ -4404,17 +4404,8 @@ ________________________________________
 
 Логика пайплайна:
 
-```
-GitHub push в ветку main или tag (например, v1.0.1)
-   ↓
-Собираем Docker-образ
-   ↓
-Публикуем его в Docker Hub
-   ↓
-(по тегу) — подключаемся по SSH к master-ноде
-   ↓
-Выполняем: kubectl set image
-```
+![116](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/116.png)
+
 ![61](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/61.png)
 
 
@@ -4422,16 +4413,25 @@ GitHub push в ветку main или tag (например, v1.0.1)
 
 При push tag вида `v\*`: build образа с этим тэгом, push и выполняем обновление deployment в кластере.
 
-![65](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/65.png)
+![106](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/106.png)
 
-![66](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/66.png)
+![107](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/107.png)
 
-![67](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/67.png)
+![108](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/108.png)
 
-![68](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/68.png)
+![109](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/109.png)
 
-![69](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/69.png)
+![110](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/110.png)
 
+![111](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/111.png)
+
+![112](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/112.png)
+
+![113](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/113.png)
+
+![114](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/114.png)
+
+![115](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/115.png)
 
 В этом yaml:
 
