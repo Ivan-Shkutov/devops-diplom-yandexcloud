@@ -9,19 +9,15 @@ on:
 
 jobs:
   terraform:
-    name: Terraform Check
+    name: Terraform Check (${{ matrix.dir }})
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        terraform_dir:
+        dir:
           - diplom/infra/01-bootstrap
           - diplom/infra/02-network
           - diplom/infra/03-k8s
-
-    defaults:
-      run:
-        working-directory: ${{ matrix.terraform_dir }}
 
     steps:
       - name: Checkout repository
@@ -30,14 +26,18 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Format Check
-        run: terraform fmt -check -recursive
-
       - name: Terraform Init
+        working-directory: ${{ matrix.dir }}
         run: terraform init -backend=false
 
+      - name: Terraform Format Check
+        working-directory: ${{ matrix.dir }}
+        run: terraform fmt -check -recursive
+
       - name: Terraform Validate
+        working-directory: ${{ matrix.dir }}
         run: terraform validate -no-color
 
       - name: Terraform Plan
+        working-directory: ${{ matrix.dir }}
         run: terraform plan -no-color
