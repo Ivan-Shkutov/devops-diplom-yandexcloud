@@ -7,18 +7,10 @@ on:
 
 jobs:
 
-  # 1. Checkout
-  checkout:
-    name: 01 - Checkout
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-  # 2. Format check
+  # 1. Format check
   fmt:
-    name: 02 - Terraform fmt
+    name: 01 - Terraform fmt
     runs-on: ubuntu-latest
-    needs: checkout
 
     steps:
       - uses: actions/checkout@v4
@@ -29,9 +21,9 @@ jobs:
       - name: Terraform fmt
         run: terraform fmt -check -recursive
 
-  # 3. Init
+  # 2. Init
   init:
-    name: 03 - Terraform init
+    name: 02 - Terraform init
     runs-on: ubuntu-latest
     needs: fmt
 
@@ -44,9 +36,9 @@ jobs:
       - name: Terraform init
         run: terraform init
 
-  # 4. Validate
+  # 3. Validate
   validate:
-    name: 04 - Terraform validate
+    name: 03 - Terraform validate
     runs-on: ubuntu-latest
     needs: init
 
@@ -56,7 +48,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Export env vars
+      - name: Export variables
         run: |
           echo "TF_VAR_cloud_id=${{ secrets.YC_CLOUD_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_folder_id=${{ secrets.YC_FOLDER_ID }}" >> $GITHUB_ENV
@@ -66,9 +58,9 @@ jobs:
       - name: Terraform validate
         run: terraform validate
 
-  # 5. Plan
+  # 4. Plan
   plan:
-    name: 05 - Terraform plan
+    name: 04 - Terraform plan
     runs-on: ubuntu-latest
     needs: validate
 
@@ -78,7 +70,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Export env vars
+      - name: Export variables
         run: |
           echo "TF_VAR_cloud_id=${{ secrets.YC_CLOUD_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_folder_id=${{ secrets.YC_FOLDER_ID }}" >> $GITHUB_ENV
