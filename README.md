@@ -4406,6 +4406,54 @@ ________________________________________
 
 ![116](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/116.png)
 
+```
+Пояснение архитектуры
+
+	1. GitHub
+хранит код Terraform + Kubernetes
+запускает GitHub Actions при push/tag
+
+	2. GitHub Actions CI/CD
+Разделён на 2 части:
+	- Terraform CI
+bootstrap (IAM, SA, roles)
+network (VPC + subnets)
+k8s (VM + cluster infra)
+выполняет: init, validate, plan
+
+	- Deploy pipeline
+build Docker image
+push в Docker Hub
+deploy в Kubernetes
+
+	3. Yandex Cloud инфраструктура
+Network layer
+VPC network
+subnet-a / subnet-b / subnet-c
+
+Compute layer
+master node
+worker nodes
+
+Kubernetes layer
+deployment nginx-image
+service NodePort (30080)
+
+	4. Bastion access (ключевая часть)
+GitHub Actions → Bastion → Master node → Kubernetes
+Используется:
+ssh -J bastion ubuntu@10.10.0.3
+
+	5. Docker layer
+build image в CI
+push в Docker Hub
+pull в Kubernetes deployment
+
+	6. Kubernetes runtime
+pods запускают приложение
+service делает доступ через NodePort
+```
+
 То есть, при каждом пуше в main: билдим и пушим образ с тэгом `latest`.  
 
 При push tag вида `v\*`: build образа с этим тэгом, push и выполняем обновление deployment в кластере.
