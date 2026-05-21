@@ -2,148 +2,88 @@ name: Terraform CI
 
 on:
   push:
-    branches:
-      - main
-
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
 
 jobs:
 
   # 1. Checkout repository
   checkout:
-    name: 01 - Checkout Repository
+    name: 01 - Checkout
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-
   # 2. Setup Terraform
-  terraform-setup:
+  setup:
     name: 02 - Setup Terraform
     runs-on: ubuntu-latest
     needs: checkout
-
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Check Terraform version
-        run: terraform version
-
-
   # 3. Terraform format check
-  terraform-fmt:
-    name: 03 - Terraform Format Check
+  fmt:
+    name: 03 - Terraform fmt
     runs-on: ubuntu-latest
-    needs: terraform-setup
-
-    strategy:
-      matrix:
-        directory:
-          - diplom/infra/01-bootstrap
-          - diplom/infra/02-network
-          - diplom/infra/03-k8s
-
-    defaults:
-      run:
-        working-directory: ${{ matrix.directory }}
-
+    needs: setup
     steps:
       - uses: actions/checkout@v4
-
-      - uses: hashicorp/setup-terraform@v3
 
       - name: Terraform fmt
-        run: terraform fmt -check -recursive
-
+        run: terraform fmt -check
 
   # 4. Terraform init
-  terraform-init:
-    name: 04 - Terraform Init
+  init:
+    name: 04 - Terraform init
     runs-on: ubuntu-latest
-    needs: terraform-fmt
-
-    strategy:
-      matrix:
-        directory:
-          - diplom/infra/01-bootstrap
-          - diplom/infra/02-network
-          - diplom/infra/03-k8s
-
-    defaults:
-      run:
-        working-directory: ${{ matrix.directory }}
-
+    needs: fmt
     steps:
       - uses: actions/checkout@v4
 
-      - uses: hashicorp/setup-terraform@v3
-
       - name: Terraform init
-        run: terraform init -backend=false
-
+        run: terraform init
 
   # 5. Terraform validate
-  terraform-validate:
-    name: 05 - Terraform Validate
+  validate:
+    name: 05 - Terraform validate
     runs-on: ubuntu-latest
-    needs: terraform-init
-
-    strategy:
-      matrix:
-        directory:
-          - diplom/infra/01-bootstrap
-          - diplom/infra/02-network
-          - diplom/infra/03-k8s
-
-    defaults:
-      run:
-        working-directory: ${{ matrix.directory }}
-
+    needs: init
     steps:
       - uses: actions/checkout@v4
 
-      - uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform init
-        run: terraform init -backend=false
+      - name: Export variables
+        run: |
+          echo "TF_VAR_cloud_id=${{ secrets.YC_CLOUD_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_folder_id=${{ secrets.YC_FOLDER_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_token=${{ secrets.YC_TOKEN }}" >> $GITHUB_ENV
+          echo "TF_VAR_ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}" >> $GITHUB_ENV
 
       - name: Terraform validate
         run: terraform validate
 
-
   # 6. Terraform plan
-  terraform-plan:
-    name: 06 - Terraform Plan
+  plan:
+    name: 06 - Terraform plan
     runs-on: ubuntu-latest
-    needs: terraform-validate
-
-    strategy:
-      matrix:
-        directory:
-          - diplom/infra/01-bootstrap
-          - diplom/infra/02-network
-          - diplom/infra/03-k8s
-
-    defaults:
-      run:
-        working-directory: ${{ matrix.directory }}
-
+    needs: validate
     steps:
       - uses: actions/checkout@v4
 
-      - uses: hashicorp/setup-terraform@v3
+      - name: Export variables
+        run: |
+          echo "TF_VAR_cloud_id=${{ secrets.YC_CLOUD_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_folder_id=${{ secrets.YC_FOLDER_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_token=${{ secrets.YC_TOKEN }}" >> $GITHUB_ENV
+          echo "TF_VAR_ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}" >> $GITHUB_ENV
 
       - name: Terraform init
-        run: terraform init -backend=false
+        run: terraform init
 
       - name: Terraform plan
-        env:
-          YC_TOKEN: ${{ secrets.YC_TOKEN }}
-          YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
-          YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
-        run: terraform plan -input=false
+        run: terraform plan
