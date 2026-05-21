@@ -7,57 +7,56 @@ on:
 
 jobs:
 
-  # 1. Checkout repository
+  # 1. Checkout
   checkout:
     name: 01 - Checkout
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-  # 2. Setup Terraform
-  setup:
-    name: 02 - Setup Terraform
+  # 2. Format check
+  fmt:
+    name: 02 - Terraform fmt
     runs-on: ubuntu-latest
     needs: checkout
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-  # 3. Terraform format check
-  fmt:
-    name: 03 - Terraform fmt
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - uses: actions/checkout@v4
-
       - name: Terraform fmt
-        run: terraform fmt -check
+        run: terraform fmt -check -recursive
 
-  # 4. Terraform init
+  # 3. Init
   init:
-    name: 04 - Terraform init
+    name: 03 - Terraform init
     runs-on: ubuntu-latest
     needs: fmt
+
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
 
       - name: Terraform init
         run: terraform init
 
-  # 5. Terraform validate
+  # 4. Validate
   validate:
-    name: 05 - Terraform validate
+    name: 04 - Terraform validate
     runs-on: ubuntu-latest
     needs: init
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Export variables
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Export env vars
         run: |
           echo "TF_VAR_cloud_id=${{ secrets.YC_CLOUD_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_folder_id=${{ secrets.YC_FOLDER_ID }}" >> $GITHUB_ENV
@@ -67,15 +66,19 @@ jobs:
       - name: Terraform validate
         run: terraform validate
 
-  # 6. Terraform plan
+  # 5. Plan
   plan:
-    name: 06 - Terraform plan
+    name: 05 - Terraform plan
     runs-on: ubuntu-latest
     needs: validate
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Export variables
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Export env vars
         run: |
           echo "TF_VAR_cloud_id=${{ secrets.YC_CLOUD_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_folder_id=${{ secrets.YC_FOLDER_ID }}" >> $GITHUB_ENV
