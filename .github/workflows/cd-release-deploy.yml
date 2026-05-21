@@ -7,33 +7,89 @@ on:
 
 jobs:
 
-  release:
+  # 1. Checkout
+  checkout:
+    name: 01 - Checkout Source
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Get version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
+  # 2. Versioning
+  version:
+    name: 02 - Get Version
+    runs-on: ubuntu-latest
+    needs: checkout
+    outputs:
+      version: ${{ steps.ver.outputs.version }}
+    steps:
+      - id: ver
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+
+  # 3. Docker Build
+  build:
+    name: 03 - Build Docker Image
+    runs-on: ubuntu-latest
+    needs: version
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: |
+          docker build \
+            -t ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }} \
+            -t ${{ secrets.DOCKER_USERNAME }}/app:latest \
+            ./diplom/test-app
+
+
+  # 4. Docker Push
+  push:
+    name: 04 - Push Docker Image
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Login Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: Build versioned image
+      - name: Push images
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/app:${{ env.VERSION }} ./diplom/test-app
+          docker push ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/app:latest
 
-      - name: Push versioned image
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/app:${{ env.VERSION }}
 
-      - name: Setup kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+  # 5. Deploy to Kubernetes
+  deploy:
+    name: 05 - Deploy to K8s (via Bastion)
+    runs-on: ubuntu-latest
+    needs: push
 
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl set image deployment/app app=${{ secrets.DOCKER_USERNAME }}/app:${{ env.VERSION }}
-          kubectl rollout status deployment/app
-          
+    steps:
+      - name: Deploy via SSH to Bastion
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            kubectl set image deployment/nginx-image nginx-image=${{ secrets.DOCKER_USERNAME }}/app:${{ github.ref_name }}
+            kubectl rollout status deployment/nginx-image
+
+
+  # 6. Verify Deployment
+  verify:
+    name: 06 - Verify Deployment
+    runs-on: ubuntu-latest
+    needs: deploy
+
+    steps:
+      - name: Check service
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            kubectl get pods
+            kubectl get svc
+            kubectl rollout status deployment/nginx-image
