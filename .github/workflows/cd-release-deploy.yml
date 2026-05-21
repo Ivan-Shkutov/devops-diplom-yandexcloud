@@ -1,4 +1,4 @@
-name: CI/CD Pipeline (Release + Deploy)
+name: CD - Release & Deploy
 
 on:
   push:
@@ -7,94 +7,119 @@ on:
 
 jobs:
 
-  # 1. Checkout
-  checkout:
-    name: 01 - Checkout
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-
-  # 2. Extract version
+  # 1. Get application version from git tag
   version:
-    name: 02 - Extract Version
+    name: 01 - Get Version
     runs-on: ubuntu-latest
-    needs: checkout
+
     outputs:
-      version: ${{ steps.setver.outputs.version }}
+      version: ${{ steps.version.outputs.version }}
 
     steps:
-      - name: Set version
-        id: setver
+      - name: Extract version
+        id: version
         run: |
-          VERSION=${GITHUB_REF#refs/tags/}
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
 
-  # 3. Build & Push Docker image
-  build_and_push:
-    name: 03 - Build & Push
+  # 2. Build Docker image
+  build:
+    name: 02 - Build Docker Image
     runs-on: ubuntu-latest
     needs: version
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Login Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      - name: Login to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | \
+          docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }} ./diplom/test-app
+          docker build \
+            -t ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }} \
+            ./diplom/test-app
+
+
+  # 3. Push Docker image to Docker Hub
+  push:
+    name: 03 - Push Docker Image
+    runs-on: ubuntu-latest
+    needs:
+      - version
+      - build
+
+    steps:
+      - name: Login to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | \
+          docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Push image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
+          docker push \
+            ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
 
 
-  # 4. Deploy via Bastion -> Master
+  # 4. Deploy application to Kubernetes cluster
   deploy:
     name: 04 - Deploy to Kubernetes
     runs-on: ubuntu-latest
-    needs: build_and_push
+    needs:
+      - version
+      - push
 
     steps:
-      - name: Deploy via bastion
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}     # 93.77.182.164
-          username: ubuntu
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            VERSION=${GITHUB_REF#refs/tags/}
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-            echo "Deploying version: $VERSION"
+      - name: Add SSH known hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-            ssh ubuntu@10.10.0.3 "
-              kubectl set image deployment/nginx-image \
-                nginx-image=${{ secrets.DOCKER_USERNAME }}/app:$VERSION
+      - name: Deploy application
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+              -J ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+              ubuntu@10.10.0.3 "
+          
+          kubectl set image deployment/nginx-image \
+          nginx-image=${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
 
-              kubectl rollout status deployment/nginx-image
-              kubectl get pods
-              kubectl get svc
-            "
+          kubectl rollout status deployment/nginx-image
+          "
 
 
-  # 5. Verify cluster state
+  # 5. Verify Kubernetes cluster
   verify:
-    name: 05 - Verify
+    name: 05 - Verify Deployment
     runs-on: ubuntu-latest
     needs: deploy
 
     steps:
-      - name: Final verification via bastion
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ubuntu
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            ssh ubuntu@10.10.0.3 "kubectl get nodes -o wide"
-            ssh ubuntu@10.10.0.3 "kubectl get pods"
-            ssh ubuntu@10.10.0.3 "kubectl get svc"
-            ssh ubuntu@10.10.0.3 "kubectl rollout status deployment/nginx-image"
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Check Kubernetes cluster
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+              -J ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+              ubuntu@10.10.0.3 "
+          
+          echo '=== Nodes ==='
+          kubectl get nodes
+
+          echo '=== Pods ==='
+          kubectl get pods
+
+          echo '=== Services ==='
+          kubectl get svc
+          "
