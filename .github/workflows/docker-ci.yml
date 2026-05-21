@@ -1,8 +1,19 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
 
   ci:
     name: CI - Validate
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
       - run: ls -la diplom/test-app
