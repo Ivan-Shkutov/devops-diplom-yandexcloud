@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
 
 
-  # 2. Extract version from tag
+  # 2. Extract version
   version:
     name: 02 - Extract Version
     runs-on: ubuntu-latest
@@ -31,9 +31,9 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
 
-  # 3. Build + Push Docker Image (FIXED)
+  # 3. Build & Push Docker image
   build_and_push:
-    name: 03 - Build & Push Image
+    name: 03 - Build & Push
     runs-on: ubuntu-latest
     needs: version
 
@@ -52,17 +52,17 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
 
 
-  # 4. Deploy via Bastion -> Master -> Kubernetes
+  # 4. Deploy via Bastion -> Master
   deploy:
     name: 04 - Deploy to Kubernetes
     runs-on: ubuntu-latest
     needs: build_and_push
 
     steps:
-      - name: Deploy via bastion SSH
+      - name: Deploy via bastion
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: ${{ secrets.SSH_HOST }}     # 93.77.182.164
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
@@ -70,27 +70,24 @@ jobs:
 
             echo "Deploying version: $VERSION"
 
-            ssh ubuntu@10.10.0.3 << EOF
+            ssh ubuntu@10.10.0.3 "
+              kubectl set image deployment/nginx-image \
+                nginx-image=${{ secrets.DOCKER_USERNAME }}/app:$VERSION
 
-            kubectl set image deployment/nginx-image \
-              nginx-image=${{ secrets.DOCKER_USERNAME }}/app:$VERSION
-
-            kubectl rollout status deployment/nginx-image
-
-            kubectl get pods
-            kubectl get svc
-
-            EOF
+              kubectl rollout status deployment/nginx-image
+              kubectl get pods
+              kubectl get svc
+            "
 
 
-  # 5. Verify deployment
+  # 5. Verify cluster state
   verify:
-    name: 05 - Verify Deployment
+    name: 05 - Verify
     runs-on: ubuntu-latest
     needs: deploy
 
     steps:
-      - name: SSH verify via bastion
+      - name: Final verification via bastion
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
