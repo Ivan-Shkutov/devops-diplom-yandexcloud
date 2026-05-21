@@ -4406,9 +4406,6 @@ ________________________________________
 
 ![116](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/116.png)
 
-![61](https://github.com/Ivan-Shkutov/devops-diplom-yandexcloud/blob/main/png/61.png)
-
-
 То есть, при каждом пуше в main: билдим и пушим образ с тэгом `latest`.  
 
 При push tag вида `v\*`: build образа с этим тэгом, push и выполняем обновление deployment в кластере.
