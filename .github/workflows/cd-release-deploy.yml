@@ -1,4 +1,4 @@
-name: Release & Deploy
+name: CI/CD Pipeline (Release + Deploy)
 
 on:
   push:
@@ -7,81 +7,115 @@ on:
 
 jobs:
 
-  # 1. Get version
-  version:
-    name: 01 - Extract Version
+  # 1. Checkout
+  checkout:
+    name: 01 - Checkout
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+
+  # 2. Extract version
+  version:
+    name: 02 - Extract Version
+    runs-on: ubuntu-latest
+    needs: checkout
     outputs:
       version: ${{ steps.setver.outputs.version }}
 
     steps:
-      - name: Extract tag
+      - name: Set version
         id: setver
         run: |
-          VERSION=${GITHUB_REF_NAME}
+          VERSION=${GITHUB_REF#refs/tags/}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
 
-  # 2. Build + Push (ОДИН JOB — важно!)
-  build-and-push:
-    name: 02 - Build & Push Image
+  # 3. Build image
+  build:
+    name: 03 - Build Image
     runs-on: ubuntu-latest
     needs: version
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Login to Docker Hub
+      - name: Login Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Build image
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }} ./diplom/test-app
 
+
+  # 4. Push image
+  push:
+    name: 04 - Push Image
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Login Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
       - name: Push image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
 
 
-  # 3. Deploy to Kubernetes
+  # 5. Deploy via Bastion -> Master -> Kubernetes
   deploy:
-    name: 03 - Deploy to Kubernetes
+    name: 05 - Deploy to Kubernetes
     runs-on: ubuntu-latest
-    needs: build-and-push
+    needs: push
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Deploy via Bastion SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}   # bastion IP
+          username: ubuntu
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            VERSION=${GITHUB_REF#refs/tags/}
 
-      - name: Setup kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+            echo "Deploying version: $VERSION"
 
-      - name: Deploy image
-        run: |
-          kubectl set image deployment/nginx-image \
-            nginx-image=${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
+            ssh ubuntu@10.10.0.3 << EOF
 
-      - name: Wait rollout
-        run: |
-          kubectl rollout status deployment/nginx-image
+            kubectl set image deployment/nginx-image \
+              nginx-image=${{ secrets.DOCKER_USERNAME }}/app:$VERSION
+
+            kubectl rollout status deployment/nginx-image
+
+            kubectl get pods
+            kubectl get svc
+
+            EOF
 
 
-  # 4. Verify via bastion
+  # 6. Verify (on bastion)
   verify:
-    name: 04 - Verify Deployment
+    name: 06 - Verify Deployment
     runs-on: ubuntu-latest
     needs: deploy
 
     steps:
-      - name: SSH check cluster
+      - name: SSH verify cluster via bastion
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
+          username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
-            kubectl get nodes -o wide
-            kubectl get pods
-            kubectl get svc
-            kubectl rollout status deployment/nginx-image
+            echo "=== NODES ==="
+            ssh ubuntu@10.10.0.3 "kubectl get nodes -o wide"
+
+            echo "=== PODS ==="
+            ssh ubuntu@10.10.0.3 "kubectl get pods"
+
+            echo "=== SERVICES ==="
+            ssh ubuntu@10.10.0.3 "kubectl get svc"
+
+            echo "=== DEPLOYMENT STATUS ==="
+            ssh ubuntu@10.10.0.3 "kubectl rollout status deployment/nginx-image"
