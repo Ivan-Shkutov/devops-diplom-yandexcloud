@@ -48,80 +48,48 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
 
 
-  # 3. Deploy to Kubernetes via Bastion
-  deploy:
-    name: 03 - Deploy Kubernetes
+  # 3. Release Information
+  release-info:
+    name: 03 - Release Information
     runs-on: ubuntu-latest
     needs:
       - version
       - docker
 
     steps:
-      - name: Setup SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      - name: Deploy application
-        run: |
-          ssh -o StrictHostKeyChecking=no \
-              -i ~/.ssh/id_rsa \
-              -J ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-              ubuntu@10.10.0.3 "
-          
-          kubectl set image deployment/nginx-image \
-          nginx-image=${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
-
-          kubectl rollout status deployment/nginx-image
-          "
-
-
-  # 4. Verify Kubernetes Deployment
-  verify:
-    name: 04 - Verify Deployment
-    runs-on: ubuntu-latest
-    needs: deploy
-
-    steps:
-      - name: Setup SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      - name: Verify Kubernetes cluster
-        run: |
-          ssh -o StrictHostKeyChecking=no \
-              -i ~/.ssh/id_rsa \
-              -J ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-              ubuntu@10.10.0.3 "
-          
-          echo '=== Nodes ==='
-          kubectl get nodes
-
-          echo '=== Pods ==='
-          kubectl get pods
-
-          echo '=== Services ==='
-          kubectl get svc
-
-          echo '=== Deployments ==='
-          kubectl get deployments
-          "
-
-
-  # 5. Show Release Info
-  info:
-    name: 05 - Release Info
-    runs-on: ubuntu-latest
-    needs:
-      - verify
-      - version
-
-    steps:
-      - name: Print release information
+      - name: Show release info
         run: |
           echo "Release completed successfully"
-          echo "Application version: ${{ needs.version.outputs.version }}"
-          echo "Docker image: ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}"
+          echo "Version: ${{ needs.version.outputs.version }}"
+          echo "Docker image:"
+          echo "${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}"
+
+
+  # 4. Kubernetes Manual Deploy Instructions
+  deploy-info:
+    name: 04 - Kubernetes Deploy Info
+    runs-on: ubuntu-latest
+    needs: release-info
+
+    steps:
+      - name: Show deploy command
+        run: |
+          echo "Deploy manually on Kubernetes master:"
+          echo ""
+          echo "ssh -J ubuntu@${{ secrets.SSH_HOST }} ubuntu@10.10.0.3"
+          echo ""
+          echo "kubectl set image deployment/nginx-image nginx-image=${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}"
+          echo ""
+          echo "kubectl rollout status deployment/nginx-image"
+
+
+  # 5. Final Status
+  finish:
+    name: 05 - Pipeline Finished
+    runs-on: ubuntu-latest
+    needs: deploy-info
+
+    steps:
+      - name: Pipeline status
+        run: |
+          echo "CI/CD pipeline finished successfully"
