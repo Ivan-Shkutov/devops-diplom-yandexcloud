@@ -36,12 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform init
-        run: terraform init
-
-      - name: Terraform validate
-        run: terraform validate
+      - run: terraform validate
 
   bootstrap-plan:
     name: 01 - bootstrap plan
@@ -55,12 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform init
-        run: terraform init
-
-      - name: Terraform plan
-        run: terraform plan
+      - run: terraform plan
 
 
   # =========================
@@ -93,12 +83,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform init
-        run: terraform init
-
-      - name: Terraform validate
-        run: terraform validate
+      - run: terraform validate
 
   network-plan:
     name: 02 - network plan
@@ -112,12 +97,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform init
-        run: terraform init
-
-      - name: Terraform plan
-        run: terraform plan
+      - run: terraform plan
 
 
   # =========================
@@ -146,6 +126,7 @@ jobs:
 
       - run: terraform init
 
+
   k8s-validate:
     name: 03 - k8s validate
     runs-on: ubuntu-latest
@@ -171,6 +152,7 @@ jobs:
 
       - name: Terraform validate
         run: terraform validate
+
 
   k8s-plan:
     name: 03 - k8s plan
