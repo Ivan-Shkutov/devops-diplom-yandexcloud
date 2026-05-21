@@ -17,7 +17,7 @@ jobs:
   # 01 - BOOTSTRAP
   # =========================
 
-  bootstrap-init:
+  01-bootstrap-init:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -27,7 +27,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init
 
-  bootstrap-validate:
+  01-bootstrap-validate:
     runs-on: ubuntu-latest
     needs: bootstrap-init
     defaults:
@@ -39,7 +39,7 @@ jobs:
       - run: terraform init
       - run: terraform validate
 
-  bootstrap-plan:
+  01-bootstrap-plan:
     runs-on: ubuntu-latest
     needs: bootstrap-validate
     defaults:
@@ -56,7 +56,7 @@ jobs:
   # 02 - NETWORK
   # =========================
 
-  network-init:
+  02-network-init:
     runs-on: ubuntu-latest
     needs: bootstrap-plan
     defaults:
@@ -79,7 +79,7 @@ jobs:
       - run: terraform init
       - run: terraform validate
 
-  network-plan:
+  02-network-plan:
     runs-on: ubuntu-latest
     needs: network-validate
     defaults:
@@ -96,7 +96,7 @@ jobs:
   # 03 - K8S
   # =========================
 
-  k8s-init:
+  03-k8s-init:
     runs-on: ubuntu-latest
     needs: network-plan
     defaults:
@@ -107,7 +107,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init
 
-  k8s-validate:
+  03-k8s-validate:
     runs-on: ubuntu-latest
     needs: k8s-init
     defaults:
@@ -119,7 +119,7 @@ jobs:
       - run: terraform init
       - run: terraform validate
 
-  k8s-plan:
+  03-k8s-plan:
     runs-on: ubuntu-latest
     needs: k8s-validate
     defaults:

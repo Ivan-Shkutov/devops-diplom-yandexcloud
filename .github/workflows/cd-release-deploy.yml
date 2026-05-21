@@ -7,7 +7,10 @@ on:
 
 jobs:
 
+  # =========================
   # 1. Get Version
+  # =========================
+
   version:
     name: 01 - Get Version
     runs-on: ubuntu-latest
@@ -21,8 +24,10 @@ jobs:
         run: |
           echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-
+  # =========================
   # 2. Build and Push Docker Image
+  # =========================
+
   docker:
     name: 02 - Build & Push Docker
     runs-on: ubuntu-latest
@@ -47,8 +52,10 @@ jobs:
           docker push \
             ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
 
-
+  # =========================
   # 3. Release Information
+  # =========================
+
   release-info:
     name: 03 - Release Information
     runs-on: ubuntu-latest
@@ -64,8 +71,10 @@ jobs:
           echo "Docker image:"
           echo "${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}"
 
+  # =========================
+  # 4. Kubernetes Deploy Instructions
+  # =========================
 
-  # 4. Kubernetes Manual Deploy Instructions
   deploy-info:
     name: 04 - Kubernetes Deploy Info
     runs-on: ubuntu-latest
@@ -82,8 +91,10 @@ jobs:
           echo ""
           echo "kubectl rollout status deployment/nginx-image"
 
-
+  # =========================
   # 5. Final Status
+  # =========================
+  
   finish:
     name: 05 - Pipeline Finished
     runs-on: ubuntu-latest
