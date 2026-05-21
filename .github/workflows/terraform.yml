@@ -63,8 +63,6 @@ jobs:
           - diplom/infra/02-network
           - diplom/infra/03-k8s
 
-    environment: production
-
     env:
       TF_IN_AUTOMATION: true
       TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
