@@ -22,7 +22,7 @@ resource "yandex_compute_instance" "master" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 
   scheduling_policy {
@@ -55,13 +55,14 @@ resource "yandex_compute_instance" "node1" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 
   scheduling_policy {
     preemptible = true
   }
 }
+
 
 resource "yandex_compute_instance" "node2" {
   name        = "node2"
@@ -87,13 +88,14 @@ resource "yandex_compute_instance" "node2" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 
   scheduling_policy {
     preemptible = true
   }
 }
+
 
 resource "yandex_compute_instance" "node3" {
   name        = "node3"
@@ -119,12 +121,10 @@ resource "yandex_compute_instance" "node3" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 
   scheduling_policy {
     preemptible = true
   }
 }
-
-
