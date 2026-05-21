@@ -7,32 +7,27 @@ on:
 
 jobs:
 
-  # 1. Checkout
-  checkout:
-    name: 01 - Checkout
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-  # 2. Extract version from tag
+  # 1. Get version
   version:
-    name: 02 - Extract Version
+    name: 01 - Extract Version
     runs-on: ubuntu-latest
-    needs: checkout
     outputs:
       version: ${{ steps.setver.outputs.version }}
+
     steps:
-      - name: Set version
+      - name: Extract tag
         id: setver
         run: |
-          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${GITHUB_REF_NAME}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-  # 3. Build Docker image
-  build:
-    name: 03 - Build Image
+
+  # 2. Build + Push (ОДИН JOB — важно!)
+  build-and-push:
+    name: 02 - Build & Push Image
     runs-on: ubuntu-latest
     needs: version
+
     steps:
       - uses: actions/checkout@v4
 
@@ -43,24 +38,16 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }} ./diplom/test-app
 
-  # 4. Push Docker image
-  push:
-    name: 04 - Push Image
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-
       - name: Push image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
 
-  # 5. Deploy to Kubernetes
+
+  # 3. Deploy to Kubernetes
   deploy:
-    name: 05 - Deploy to Kubernetes
+    name: 03 - Deploy to Kubernetes
     runs-on: ubuntu-latest
-    needs: push
+    needs: build-and-push
 
     steps:
       - uses: actions/checkout@v4
@@ -70,7 +57,7 @@ jobs:
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
 
-      - name: Deploy new image
+      - name: Deploy image
         run: |
           kubectl set image deployment/nginx-image \
             nginx-image=${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
@@ -79,28 +66,22 @@ jobs:
         run: |
           kubectl rollout status deployment/nginx-image
 
-  # 6. Verify deployment via bastion
+
+  # 4. Verify via bastion
   verify:
-    name: 06 - Verify Deployment
+    name: 04 - Verify Deployment
     runs-on: ubuntu-latest
     needs: deploy
 
     steps:
-      - name: SSH to Kubernetes master via bastion
+      - name: SSH check cluster
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            echo "=== Cluster state ==="
             kubectl get nodes -o wide
-
-            echo "=== Pods ==="
             kubectl get pods
-
-            echo "=== Services ==="
             kubectl get svc
-
-            echo "=== Rollout status ==="
             kubectl rollout status deployment/nginx-image
