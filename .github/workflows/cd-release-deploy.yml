@@ -9,87 +9,98 @@ jobs:
 
   # 1. Checkout
   checkout:
-    name: 01 - Checkout Source
+    name: 01 - Checkout
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-
-  # 2. Versioning
+  # 2. Extract version from tag
   version:
-    name: 02 - Get Version
+    name: 02 - Extract Version
     runs-on: ubuntu-latest
     needs: checkout
     outputs:
-      version: ${{ steps.ver.outputs.version }}
+      version: ${{ steps.setver.outputs.version }}
     steps:
-      - id: ver
-        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      - name: Set version
+        id: setver
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-
-  # 3. Docker Build
+  # 3. Build Docker image
   build:
-    name: 03 - Build Docker Image
+    name: 03 - Build Image
     runs-on: ubuntu-latest
     needs: version
     steps:
       - uses: actions/checkout@v4
 
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
       - name: Build image
         run: |
-          docker build \
-            -t ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }} \
-            -t ${{ secrets.DOCKER_USERNAME }}/app:latest \
-            ./diplom/test-app
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }} ./diplom/test-app
 
-
-  # 4. Docker Push
+  # 4. Push Docker image
   push:
-    name: 04 - Push Docker Image
+    name: 04 - Push Image
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Login Docker Hub
+      - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: Push images
+      - name: Push image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/app:latest
-
 
   # 5. Deploy to Kubernetes
   deploy:
-    name: 05 - Deploy to K8s (via Bastion)
+    name: 05 - Deploy to Kubernetes
     runs-on: ubuntu-latest
     needs: push
 
     steps:
-      - name: Deploy via SSH to Bastion
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            kubectl set image deployment/nginx-image nginx-image=${{ secrets.DOCKER_USERNAME }}/app:${{ github.ref_name }}
-            kubectl rollout status deployment/nginx-image
+      - uses: actions/checkout@v4
 
+      - name: Setup kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
 
-  # 6. Verify Deployment
+      - name: Deploy new image
+        run: |
+          kubectl set image deployment/nginx-image \
+            nginx-image=${{ secrets.DOCKER_USERNAME }}/app:${{ needs.version.outputs.version }}
+
+      - name: Wait rollout
+        run: |
+          kubectl rollout status deployment/nginx-image
+
+  # 6. Verify deployment via bastion
   verify:
     name: 06 - Verify Deployment
     runs-on: ubuntu-latest
     needs: deploy
 
     steps:
-      - name: Check service
+      - name: SSH to Kubernetes master via bastion
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            echo "=== Cluster state ==="
+            kubectl get nodes -o wide
+
+            echo "=== Pods ==="
             kubectl get pods
+
+            echo "=== Services ==="
             kubectl get svc
+
+            echo "=== Rollout status ==="
             kubectl rollout status deployment/nginx-image
